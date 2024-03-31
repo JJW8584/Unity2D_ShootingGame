@@ -16,6 +16,8 @@ public class PlayerCtrl : MonoBehaviour
     private float iter = 0;
     private Animator _animator;
 
+    public GameManager manager;
+
     //public Transform myTr;
     void Awake()
     {
@@ -34,8 +36,7 @@ public class PlayerCtrl : MonoBehaviour
     void Update()
     {
         PlayerMove();
-        Fire();
-        
+        Fire();        
     }
 
     void PlayerMove()
@@ -105,6 +106,15 @@ public class PlayerCtrl : MonoBehaviour
             }
             }
             iter = iter > 0.1 ? 0 : iter; //발사 후 딜레이 초기화
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Enemy Bullet")
+        {
+            gameObject.SetActive(false);
+            manager.RespawnPlayer();
         }
     }
 }

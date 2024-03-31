@@ -171,12 +171,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba23c469071259748b676f2e44f46e06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyName: 
+  enemyName: C
   speed: 3
   hp: 20
   sprites:
   - {fileID: -8421458170528590454, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   - {fileID: 3714015224569861163, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  wayPoints: []
   Bullet_0: {fileID: 6607683983104249933, guid: bac1d6a27d448df49b446acc0006cd72, type: 3}
   Bullet_1: {fileID: 6607683983104249933, guid: 3e6ec13e0adaf064ab6ad9335ca3ec2d, type: 3}
-  t: 0
+  player: {fileID: 0}
+  maxShotDelay: 3
+  curShotDelay: 0

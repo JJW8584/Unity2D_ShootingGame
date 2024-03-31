@@ -10,13 +10,14 @@ public class EnemyCtrl : MonoBehaviour
     public float speed = 5;
     public int hp;
     public Sprite[] sprites;
+    public Transform[] wayPoints;
 
     public GameObject Bullet_0;
     public GameObject Bullet_1;
+    public GameObject player;
 
-    public float t = 0f;
-
-    private float iter = 0;
+    public float maxShotDelay;
+    public float curShotDelay;
 
     SpriteRenderer spriteRenderer;
     Rigidbody2D rigid;
@@ -24,19 +25,17 @@ public class EnemyCtrl : MonoBehaviour
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        rigid = GetComponent<Rigidbody2D>();
-        rigid.velocity = Vector2.down * speed;
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        BazierMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Fire();
     }
 
     void OnHit(int dmg) //피격 시 실행되는 메소드
@@ -59,7 +58,7 @@ public class EnemyCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) //Collider값은 충돌 여부만 체크
     {
-        if (collision.tag == "Bullet") //불릿과 충돌하면 로그 메시지 출력
+        if (collision.tag == "Bullet") //불릿과 충돌
         {
             BulletCtrl bulletCtrl = collision.GetComponent<BulletCtrl>();
             OnHit(bulletCtrl.dmg);
@@ -68,19 +67,32 @@ public class EnemyCtrl : MonoBehaviour
 
     void Fire()
     {
-        iter += Time.deltaTime; //총알 딜레이
-        if (iter > 0.5) //일정 시간마다 발사
+        curShotDelay += Time.deltaTime; //총알 딜레이
+        if (curShotDelay > maxShotDelay) //일정 시간마다 발사
         {
-            if (enemyName == "Enemy B")
+            Vector3 dir = player.transform.position - transform.position;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+            if (enemyName == "B")
             {
-                GameObject bullet = Instantiate(Bullet_0, transform.position, Quaternion.identity);
-                Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+                Instantiate(Bullet_0, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
             }
-            else if (enemyName == "Enemy C")
+            else if (enemyName == "C")
             {
-
+                Instantiate(Bullet_1, transform.position + Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
+                Instantiate(Bullet_1, transform.position - Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
             }
+            curShotDelay = 0;
         }
-        iter = iter > 0.5 ? 0 : iter; //발사 후 딜레이 초기화
+    }
+
+    void BazierMove()
+    {
+        for (float t = 0; t < 1; t += Time.deltaTime * speed)
+        {
+            transform.position = Mathf.Pow(1 - t, 3) * wayPoints[0].position
+                    + 3 * t * Mathf.Pow(1 - t, 2) * wayPoints[1].position
+                    + 3 * Mathf.Pow(t, 2) * (1 - t) * wayPoints[2].position
+                    + Mathf.Pow(t, 3) * wayPoints[3].position;
+        }
     }
 }

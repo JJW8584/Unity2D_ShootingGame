@@ -6,14 +6,17 @@ public class GameManager : MonoBehaviour
 {
     public GameObject[] enemyObjs;
     public Transform[] spawnPoints;
+    public Transform[] wayPoints;
 
     public float maxSpawnDelay;
     public float curSpawnelay;
 
+    public GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        SpawnEnemy();
     }
 
     // Update is called once per frame
@@ -26,22 +29,25 @@ public class GameManager : MonoBehaviour
               maxSpawnDelay = Random.Range(0.5f, 2f);
               curSpawnelay = 0;
           }*/
-        SpawnEnemy();
     }
 
     void SpawnEnemy()
     {
-        int ranPatern = Random.Range(0, 3);
-        EnemyPatern(0);
+        int ranEnemy = Random.Range(0, 3);
+
+        GameObject enemy = Instantiate(enemyObjs[1], spawnPoints[0].position, Quaternion.identity);
+        EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>();
+        enemyLogic.player = player;
+        enemyLogic.wayPoints = wayPoints;
     }
 
-    void EnemyPatern(int num)
+    public void RespawnPlayer()
     {
-        switch (num)
-        {
-            case 0:
-                break;
-        }
+        Invoke("Respawn", 2f);
     }
-    
+    void Respawn()
+    {
+        player.transform.position = Vector3.down * 3.7f;
+        player.SetActive(true);
+    }
 }

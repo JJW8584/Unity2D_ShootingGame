@@ -350,8 +350,14 @@ MonoBehaviour:
   - {fileID: 6943942330364708374, guid: beaaa8bd08dfe4a4b9237bca20d4d233, type: 3}
   spawnPoints:
   - {fileID: 930405259}
-  maxSpawnDelay: 0
+  wayPoints:
+  - {fileID: 930405259}
+  - {fileID: 1329609749}
+  - {fileID: 1040228627}
+  - {fileID: 1282311922}
+  maxSpawnDelay: 4
   curSpawnelay: 0
+  player: {fileID: 1603445500}
 --- !u!4 &377291896
 Transform:
   m_ObjectHideFlags: 0
@@ -1315,7 +1321,7 @@ Transform:
   m_GameObject: {fileID: 1603445500}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: -3.86, z: 0}
+  m_LocalPosition: {x: 0, y: -3.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1357,9 +1363,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   power: 1
-  p_Bullet_0: {fileID: 6607683983104249933, guid: 2b80fb631f5a085429c84afc0af88e99, type: 3}
-  p_Bullet_1: {fileID: 6607683983104249933, guid: 42f2bece32e30a149aeaff3cf92494bf, type: 3}
+  Bullet_0: {fileID: 6607683983104249933, guid: 2b80fb631f5a085429c84afc0af88e99, type: 3}
+  Bullet_1: {fileID: 6607683983104249933, guid: 42f2bece32e30a149aeaff3cf92494bf, type: 3}
   firePos: {fileID: 1227276564}
+  manager: {fileID: 377291895}
 --- !u!50 &1603445505
 Rigidbody2D:
   serializedVersion: 4
