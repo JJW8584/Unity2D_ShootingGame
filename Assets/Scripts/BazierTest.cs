@@ -26,6 +26,7 @@ public class BazierTest : MonoBehaviour
                         new Vector2(wayPoints[3].position.x, wayPoints[3].position.y));
 
     }
+ 
     // Start is called before the first frame update
     void Start()
     {

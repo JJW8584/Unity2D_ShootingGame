@@ -18,7 +18,7 @@ public class BgScroll : MonoBehaviour
         transform.Translate(Vector2.down * bg_speed * Time.deltaTime, Space.Self); //아래방향으로 움직임
         if(transform.position.y < -12.0f)
         {
-            transform.position = transform.position + new Vector3(0f, 24.0f, 0f); //배경이 2개이므로 24만큼 이동
+            transform.position += new Vector3(0f, 24.0f, 0f); //배경이 2개이므로 24만큼 이동
         }
     }
 }
