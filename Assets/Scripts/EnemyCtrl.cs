@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 using static UnityEditor.Progress;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnemyCtrl : MonoBehaviour
 {
@@ -29,13 +30,14 @@ public class EnemyCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        BazierMove();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         Fire();
+        StartCoroutine(BazierMove());
     }
 
     void OnHit(int dmg) //피격 시 실행되는 메소드
@@ -85,14 +87,25 @@ public class EnemyCtrl : MonoBehaviour
         }
     }
 
-    void BazierMove()
+    IEnumerator BazierMove()
     {
-        for (float t = 0; t < 1; t += Time.deltaTime * speed)
+        float t = 0f;
+        while (true)
         {
-            transform.position = Mathf.Pow(1 - t, 3) * wayPoints[0].position
-                    + 3 * t * Mathf.Pow(1 - t, 2) * wayPoints[1].position
-                    + 3 * Mathf.Pow(t, 2) * (1 - t) * wayPoints[2].position
-                    + Mathf.Pow(t, 3) * wayPoints[3].position;
+            for (int i = 0; i < 5; i += 4)
+            {
+                while (t < 1f)
+                {
+                    transform.position = Mathf.Pow(1 - t, 3) * wayPoints[i].position
+                            + 3 * t * Mathf.Pow(1 - t, 2) * wayPoints[i + 1].position
+                            + 3 * Mathf.Pow(t, 2) * (1 - t) * wayPoints[i + 2].position
+                            + Mathf.Pow(t, 3) * wayPoints[i + 3].position;
+
+                    t += Time.deltaTime / 3.0f;
+                    yield return null;
+                }
+                t = 0f;
+            }
         }
     }
 }
