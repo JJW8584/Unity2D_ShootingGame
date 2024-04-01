@@ -37,7 +37,7 @@ public class EnemyCtrl : MonoBehaviour
     void Update()
     {
         Fire();
-        StartCoroutine(BazierMove());
+        StartCoroutine(BazierMove()); //코루틴으로 실행
     }
 
     void OnHit(int dmg) //피격 시 실행되는 메소드
@@ -72,7 +72,7 @@ public class EnemyCtrl : MonoBehaviour
         curShotDelay += Time.deltaTime; //총알 딜레이
         if (curShotDelay > maxShotDelay) //일정 시간마다 발사
         {
-            Vector3 dir = player.transform.position - transform.position;
+            Vector3 dir = player.transform.position - transform.position; //총알을 플레이어 방향으로 회전
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
             if (enemyName == "B")
             {
@@ -96,16 +96,30 @@ public class EnemyCtrl : MonoBehaviour
             {
                 while (t < 1f)
                 {
-                    transform.position = Mathf.Pow(1 - t, 3) * wayPoints[i].position
+                    transform.position = Mathf.Pow(1 - t, 3) * wayPoints[i].position  //베지어 곡선을 따라 이동
                             + 3 * t * Mathf.Pow(1 - t, 2) * wayPoints[i + 1].position
                             + 3 * Mathf.Pow(t, 2) * (1 - t) * wayPoints[i + 2].position
                             + Mathf.Pow(t, 3) * wayPoints[i + 3].position;
 
+                    Vector2 tangent = CalculateBezierTangent(t, i); //접선 방향으로 회전
+                    float angle = Mathf.Atan2(tangent.y, tangent.x) * Mathf.Rad2Deg + 90;
+                    transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
                     t += Time.deltaTime / 3.0f;
+
                     yield return null;
                 }
                 t = 0f;
             }
         }
+    }
+    Vector2 CalculateBezierTangent(float t, int i) //베지어 곡선 접선 계산
+    {
+        Vector2 tangent = -3 * Mathf.Pow(1 - t, 2) * (Vector2)wayPoints[i].position;
+        tangent += (3 * Mathf.Pow(1 - t, 2) - 6 * t * (1 - t)) * (Vector2)wayPoints[i + 1].position;
+        tangent += (-3 * Mathf.Pow(t, 2) + 6 * t * (1 - t)) * (Vector2)wayPoints[i + 2].position;
+        tangent += 3 * Mathf.Pow(t, 2) * (Vector2)wayPoints[i + 3].position;
+
+        return tangent.normalized;
     }
 }
