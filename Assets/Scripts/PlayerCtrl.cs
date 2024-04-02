@@ -64,6 +64,7 @@ public class PlayerCtrl : MonoBehaviour
             iter += Time.deltaTime; //총알 딜레이
             if (iter > 0.1) //일정 시간마다 발사
             {
+                power = power > 4 ? 4 : power;
                 switch (power)
                 {
                     case 1:
@@ -111,10 +112,14 @@ public class PlayerCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Enemy Bullet")
+        if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet")
         {
             gameObject.SetActive(false);
             manager.RespawnPlayer();
+        }
+        else if(collision.tag == "PowerItem")
+        {
+            ++power;
         }
     }
 }
