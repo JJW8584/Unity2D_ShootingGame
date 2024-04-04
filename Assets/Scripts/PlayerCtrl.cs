@@ -123,7 +123,7 @@ public class PlayerCtrl : MonoBehaviour
             ++power;
         }
     }
-    private void OnDestroy()
+    void OnDisable()
     {
         // ÆÄ±« ÀÌÆåÆ® »ý¼º
         if (destructionEffectPrefab != null)

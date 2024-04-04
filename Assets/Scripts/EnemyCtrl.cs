@@ -236,9 +236,13 @@ public class EnemyCtrl : MonoBehaviour
         // 아이템 생성, 일정확률로 아이템 드랍하도록 추가 필요
         if (itemPrefab != null)
         {
-            GameObject itemObj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
-            ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
-            itemControl.wayPoints = itemWayPoints;
+            int itemRand = Random.Range(0, 10);
+            if (itemRand == 0)
+            {
+                GameObject itemObj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+                ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
+                itemControl.wayPoints = itemWayPoints;
+            }
         }
     }
 }
