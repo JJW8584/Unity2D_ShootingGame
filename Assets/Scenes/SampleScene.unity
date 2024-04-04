@@ -1847,6 +1847,7 @@ MonoBehaviour:
   Bullet_1: {fileID: 6607683983104249933, guid: 42f2bece32e30a149aeaff3cf92494bf, type: 3}
   firePos: {fileID: 1227276564}
   manager: {fileID: 377291895}
+  destructionEffectPrefab: {fileID: 7403265945427809582, guid: 2f4ededffa11ed44c925e14675d63578, type: 3}
 --- !u!50 &1603445505
 Rigidbody2D:
   serializedVersion: 4

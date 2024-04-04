@@ -32,7 +32,6 @@ public class EnemyCtrl : MonoBehaviour
 
     public GameObject destructionEffectPrefab; // 파괴 이펙트 프리팹
     public GameObject itemPrefab; // 아이템 프리팹
-    public float itemDropProbability = 0.5f; // 아이템 드롭 확률
 
     void Awake()
     {
@@ -234,7 +233,7 @@ public class EnemyCtrl : MonoBehaviour
             Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
         }
 
-        // 아이템 생성
+        // 아이템 생성, 일정확률로 아이템 드랍하도록 추가 필요
         if (itemPrefab != null)
         {
             GameObject itemObj = Instantiate(itemPrefab, transform.position, Quaternion.identity);

@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     public Transform[] MovePaternPoints1;
     public Transform[] itemWayPoints;
 
-    public float maxSpawnDelay = 3f;
-    private float curSpawnelay = 0;
+    public float maxSpawnDelay = 5f;
+    private float curSpawnelay = 3f;
 
     public GameObject player;
 
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
         if (curSpawnelay >= maxSpawnDelay)
         {
-            int paternType = Random.Range(0, 2);
+            int paternType = Random.Range(0, 2); //랜덤한 패턴을 실행
             switch(paternType)
             {
                 case 0:
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RespawnPlayer()
+    public void RespawnPlayer() //플레이어가 죽었을 때 2초 후에 부활
     {
         Invoke("Respawn", 2f);
     }
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         player.SetActive(true);
     }
 
-    IEnumerator EnemyPatern0()
+    IEnumerator EnemyPatern0() //1번째 적 비행기 패턴
     {
         SpawnEnemy0(1);
         yield return new WaitForSeconds(0.2f);
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 0;
     }
-    IEnumerator EnemyPatern1()
+    IEnumerator EnemyPatern1() //2번째 적 비행기 패턴
     {
         SpawnEnemy1(1);
         yield return new WaitForSeconds(0.2f);
