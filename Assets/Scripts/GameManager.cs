@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     public GameObject[] enemyObjs;
     public Transform[] spawnPoints;
     public Transform[] MovePaternPoints0;
@@ -13,11 +15,27 @@ public class GameManager : MonoBehaviour
     public float maxSpawnDelay = 5f;
     private float curSpawnelay = 3f;
 
+    private int maxEnemy = 10;
     public GameObject player;
+    public GameObject enemy1;
+    public GameObject enemy2;
+    public GameObject enemy3;
 
+    private void Awake()
+    {
+        if(Instance == null) //싱글턴 오브젝트 생성
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
+        //StartCoroutine(this.GenerateEnemy());
     }
 
     // Update is called once per frame
@@ -28,7 +46,7 @@ public class GameManager : MonoBehaviour
         if (curSpawnelay >= maxSpawnDelay)
         {
             int paternType = Random.Range(0, 2); //랜덤한 패턴을 실행
-            switch(paternType)
+            switch (paternType)
             {
                 case 0:
                     StartCoroutine(EnemyPatern0());
@@ -63,10 +81,10 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
     }
-    void SpawnEnemy0(int enemyType)
+    void SpawnEnemy0(int enemyType) //1번째 패턴 적 생성
     {
         GameObject enemy = Instantiate(enemyObjs[enemyType], spawnPoints[0].position, Quaternion.identity);
-        EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>();
+        EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //객체 생성 후 값 전달
         enemyLogic.player = player;
         enemyLogic.MovePaternPoints0 = MovePaternPoints0;
         enemyLogic.itemWayPoints = itemWayPoints;
@@ -84,13 +102,52 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
     }
-    void SpawnEnemy1(int enemyType)
+    void SpawnEnemy1(int enemyType) //2번째 패턴 적 생성
     {
         GameObject enemy = Instantiate(enemyObjs[enemyType], spawnPoints[1].position, Quaternion.identity);
-        EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>();
+        EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //생성 후 값 전달
         enemyLogic.player = player;
         enemyLogic.MovePaternPoints1 = MovePaternPoints1;
         enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 1;
     }
-}
+
+/*    void CreateEnemy(int a)
+    {
+        switch(a)
+        {
+            case 0:
+                GameObject.Instantiate(enemy1);
+                break;
+            case 1:
+                GameObject.Instantiate(enemy2);
+                break;
+            case 2:
+                GameObject.Instantiate(enemy3);
+                break;
+        }
+    }
+    IEnumerator GenerateEnemy()
+    {
+        yield return new WaitForSeconds(2f);
+
+        int numEnemy = (int)GameObject.FindGameObjectsWithTag("Enemy").Length;
+        Vector2 pos = new Vector2(Random.Range(-2.5f, 2.5f), 6.5f);
+        int type = Random.Range(0, 6);
+        if (numEnemy < maxEnemy)
+        {
+            if (type == 0)
+            {
+                Instantiate(enemy3, pos, Quaternion.identity);
+            }
+            else if (type == 1)
+            {
+                Instantiate(enemy2, pos, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(enemy1, pos, Quaternion.identity);
+            }
+        }
+    }
+*/}

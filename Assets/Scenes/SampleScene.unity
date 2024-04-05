@@ -508,6 +508,9 @@ MonoBehaviour:
   - {fileID: 615774014}
   maxSpawnDelay: 4
   player: {fileID: 1603445500}
+  enemy1: {fileID: 0}
+  enemy2: {fileID: 0}
+  enemy3: {fileID: 0}
 --- !u!4 &377291896
 Transform:
   m_ObjectHideFlags: 0

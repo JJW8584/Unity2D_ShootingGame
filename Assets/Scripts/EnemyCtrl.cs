@@ -19,7 +19,6 @@ public class EnemyCtrl : MonoBehaviour
 
     [SerializeField] private int Type; //플레이어 방향으로 이동
     private Transform target;
-    private float atkPoint;
 
     public GameObject Bullet_0;
     public GameObject Bullet_1;
@@ -33,6 +32,13 @@ public class EnemyCtrl : MonoBehaviour
     public GameObject destructionEffectPrefab; // 파괴 이펙트 프리팹
     public GameObject itemPrefab; // 아이템 프리팹
 
+    public int iter = 0;
+    public Transform targetTr;
+    [SerializeField] private int b_Type;
+    Quaternion _rot;
+    float _angle;
+    private float atkPoint;
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -40,16 +46,16 @@ public class EnemyCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //atkPoint = Random.Range(2.0f, 4.0f);
+        /*atkPoint = Random.Range(2.0f, 4.0f);
+        Type = Random.Range(0, 4) + 1;*/
     }
 
     // Update is called once per frame
     void Update()
     {
 
-/*      iter++;
-
-        if(transform.position.y > atkPoint)
+        /*iter++;
+        if (transform.position.y > atkPoint)
         {
             switch (Type)
             {
@@ -61,7 +67,7 @@ public class EnemyCtrl : MonoBehaviour
                     transform.Translate(Vector2.down * speed * Time.deltaTime, Space.World);
                     break;
                 case 3:
-                    transform.Translate(Vector2.down * speed * Time.deltaTime, Space.World);
+                    MoveToPlayer();
                     break;
                 default:
                     break;
@@ -70,7 +76,7 @@ public class EnemyCtrl : MonoBehaviour
         }
         else
         {
-            if(iter / 120 > 5)
+            if (iter / 120 > 5)
             {
                 switch (Type)
                 {
@@ -81,12 +87,19 @@ public class EnemyCtrl : MonoBehaviour
                         Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, 180));
                         break;
                     case 3:
-                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, 180));
+                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, _angle + 165));
+                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, _angle + 195));
+                        break;
+                    case 4:
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, 160 + i * 10));
+                        }
                         break;
                 }
             }
         }*/
-        
+
         FireToPlayer();
         switch (paternType)
         {
@@ -117,8 +130,8 @@ public class EnemyCtrl : MonoBehaviour
         target = GameObject.FindWithTag("Player").GetComponent<Transform>(); //tag로 플레이어를 찾아 이동
         Vector2 atkDir = target.position - transform.position;
         transform.Translate(atkDir.normalized * speed * Time.deltaTime);
-        float _angle = Mathf.Atan2(atkDir.y, atkDir.x) * Mathf.Rad2Deg + 90; //플레이어를 향해서 회전
-        Quaternion _rot = Quaternion.Euler(0, 0, _angle);
+        _angle = Mathf.Atan2(atkDir.y, atkDir.x) * Mathf.Rad2Deg + 90; //플레이어를 향해서 회전
+        _rot = Quaternion.Euler(0, 0, _angle);
     }
 
     void ReturnSprite()
