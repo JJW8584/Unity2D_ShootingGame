@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
         if (curSpawnelay >= maxSpawnDelay)
         {
-            int paternType = Random.Range(0, 2); //랜덤한 패턴을 실행
+            int paternType = Random.Range(0, 3); //랜덤한 패턴을 실행
             switch (paternType)
             {
                 case 0:
@@ -53,6 +53,10 @@ public class GameManager : MonoBehaviour
                     break;
                 case 1:
                     StartCoroutine(EnemyPatern1());
+                    break;
+                case 2:
+                    int randSpawn = Random.Range(0, 2) + 2;
+                    StartCoroutine(EnemyPatern2(randSpawn));
                     break;
             }
             curSpawnelay = 0;
@@ -111,7 +115,15 @@ public class GameManager : MonoBehaviour
         enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 1;
     }
-
+    IEnumerator EnemyPatern2(int spawnPoint)
+    {
+        GameObject enemy = Instantiate(enemyObjs[2], spawnPoints[spawnPoint].position, Quaternion.identity);
+        EnemyCtrl enemyLogic = enemy.GetComponent <EnemyCtrl>();
+        enemyLogic.player = player;
+        enemyLogic.itemWayPoints = itemWayPoints;
+        enemyLogic.paternType = 2;
+        yield return null;
+    }
 /*    void CreateEnemy(int a)
     {
         switch(a)

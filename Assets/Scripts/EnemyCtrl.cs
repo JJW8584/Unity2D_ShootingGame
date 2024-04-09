@@ -109,6 +109,10 @@ public class EnemyCtrl : MonoBehaviour
             case 1:
                 StartCoroutine(BazierMove1());
                 break;
+            case 2:
+                atkPoint = 2.5f;
+                StartCoroutine(EnemyMovePatern0());
+                break;
         }
     }
 
@@ -238,6 +242,18 @@ public class EnemyCtrl : MonoBehaviour
 
         return tangent.normalized;
     }
+    IEnumerator EnemyMovePatern0()
+    {
+        if (transform.position.y < atkPoint)
+        {
+            FireToPlayer();
+        }
+        else
+        {
+            transform.Translate(Vector2.down * speed * Time.deltaTime);
+        }
+        yield return null;
+    }
     private void OnDestroy()
     {
         // 파괴 이펙트 생성
@@ -246,7 +262,7 @@ public class EnemyCtrl : MonoBehaviour
             Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
         }
 
-        // 아이템 생성, 일정확률로 아이템 드랍하도록 추가 필요
+        // 아이템 생성, 일정 확률로 아이템 생성
         if (itemPrefab != null)
         {
             int itemRand = Random.Range(0, 10);
