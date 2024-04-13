@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null) //싱글턴 오브젝트 생성
+/*        if(Instance == null) //싱글턴 오브젝트 생성
         {
             Instance = this;
         }
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
+*/    }
     // Start is called before the first frame update
     void Start()
     {
