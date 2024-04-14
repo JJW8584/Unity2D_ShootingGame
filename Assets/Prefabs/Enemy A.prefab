@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyName: A
+  enemyScore: 20
   speed: 7
   hp: 1
   paternType: 0
@@ -179,3 +180,6 @@ MonoBehaviour:
   curShotDelay: 0
   destructionEffectPrefab: {fileID: 7403265945427809582, guid: 2f4ededffa11ed44c925e14675d63578, type: 3}
   itemPrefab: {fileID: 0}
+  iter: 0
+  targetTr: {fileID: 0}
+  b_Type: 0

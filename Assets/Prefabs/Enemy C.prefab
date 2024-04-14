@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyName: C
+  enemyScore: 100
   speed: 3
   hp: 15
   paternType: 0

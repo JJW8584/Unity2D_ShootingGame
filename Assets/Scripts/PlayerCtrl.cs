@@ -7,6 +7,8 @@ public class PlayerCtrl : MonoBehaviour
 {
     public int speed = 10;
     public int power = 1;
+    public int life = 3;
+    public int score = 0;
 
     public GameObject Bullet_0;
     public GameObject Bullet_1;
@@ -16,7 +18,7 @@ public class PlayerCtrl : MonoBehaviour
     private float iter = 0;
     private Animator _animator;
 
-    public GameManager manager;
+    public GameManager gameManager;
     public GameObject destructionEffectPrefab; // 파괴 이펙트 프리팹
 
     //public Transform myTr;
@@ -105,7 +107,7 @@ public class PlayerCtrl : MonoBehaviour
                         }
                         BulletCnt = BulletCnt > 5 ? 0 : BulletCnt;
                         break;
-            }
+                }
             }
             iter = iter > 0.1 ? 0 : iter; //발사 후 딜레이 초기화
         }
@@ -115,8 +117,17 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet") //적 총알에 맞았을 때 실행
         {
+            life--;
+            if(life <= 0)
+            {
+                gameManager.GameOver();
+            }
+            else
+            {
+                gameManager.UpdateLifeIcon(life);
+            }
             gameObject.SetActive(false); //비활성화
-            manager.RespawnPlayer(); //2초 후 부활
+            gameManager.RespawnPlayer(); //2초 후 부활
         }
         else if(collision.tag == "PowerItem") //아이템을 먹었을 때
         {

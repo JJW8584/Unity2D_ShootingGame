@@ -9,6 +9,7 @@ using static UnityEngine.GraphicsBuffer;
 public class EnemyCtrl : MonoBehaviour
 {
     public string enemyName;
+    public int enemyScore;
     public float speed = 5;
     public int hp;
     public int paternType;
@@ -125,6 +126,8 @@ public class EnemyCtrl : MonoBehaviour
 
         if(hp <= 0)
         {
+            PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
+            playerLogic.score += enemyScore;
             Destroy(gameObject);
         }
     }

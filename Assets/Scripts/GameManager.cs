@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,15 +18,22 @@ public class GameManager : MonoBehaviour
     public float maxSpawnDelay = 5f;
     private float curSpawnelay = 3f;
 
+    public float ScoreDelay = 0.1f;
+    private float curScoreDelay = 0.0f;
+
     private int maxEnemy = 10;
     public GameObject player;
-    public GameObject enemy1;
+
+    public TextMeshProUGUI scoreText; //UI
+    public Image[] lifeImages;
+    public GameObject gameOverSet;
+/*    public GameObject enemy1;
     public GameObject enemy2;
     public GameObject enemy3;
-
+*/
     private void Awake()
     {
-/*        if(Instance == null) //싱글턴 오브젝트 생성
+        if (Instance == null) //싱글턴 오브젝트 생성
         {
             Instance = this;
         }
@@ -31,7 +41,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-*/    }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +51,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //UI 업데이트
+        PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
+        scoreText.text = string.Format("{0:n0}", playerLogic.score);
+
         curSpawnelay += Time.deltaTime;
+        curScoreDelay += Time.deltaTime;
+        if(curScoreDelay >= ScoreDelay)
+        {
+            playerLogic.score += 1;
+            curScoreDelay = 0.0f;
+        }
 
         if (curSpawnelay >= maxSpawnDelay)
         {
@@ -71,6 +91,22 @@ public class GameManager : MonoBehaviour
     {
         player.transform.position = Vector3.down * 3.7f;
         player.SetActive(true);
+    }
+    public void UpdateLifeIcon(int life)
+    {
+        for(int i = 0; i < 3; i++) //생명 비활성화 후
+        {
+            lifeImages[i].color = new Color(1, 1, 1, 0);
+        }
+
+        for (int i = 0; i < life; i++) //남아있는 만큼만 활성화
+        {
+            lifeImages[i].color = new Color(1, 1, 1, 1);
+        }
+    }
+    public void GameOver()
+    {
+        gameOverSet.SetActive(true);
     }
 
     IEnumerator EnemyPatern0() //1번째 적 비행기 패턴
