@@ -9,6 +9,8 @@ TagManager:
   - Bullet Border
   - Enemy Bullet
   - PowerItem
+  - BoomItem
+  - Coin
   layers:
   - Default
   - TransparentFX

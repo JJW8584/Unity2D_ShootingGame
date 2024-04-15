@@ -96,8 +96,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -925927925
   m_SortingLayer: 2
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 8033092973025764044, guid: 606e3127513c6c74d852755e18a67337, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 1801263428120863714, guid: 606e3127513c6c74d852755e18a67337, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -120,6 +120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62c084946811884ab95ded42e006234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wayPoints: []
+  cloneWayPoints: []
+  player: {fileID: 0}
+  itemType: power
 --- !u!61 &493907064203034969
 BoxCollider2D:
   m_ObjectHideFlags: 0

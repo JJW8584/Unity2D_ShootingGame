@@ -7,8 +7,10 @@ public class PlayerCtrl : MonoBehaviour
 {
     public int speed = 10;
     public int power = 1;
+    public int boom;
     public int life = 3;
     public int score = 0;
+    public bool isHit;
 
     public GameObject Bullet_0;
     public GameObject Bullet_1;
@@ -20,6 +22,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public GameManager gameManager;
     public GameObject destructionEffectPrefab; // ÆÄ±« ÀÌÆåÆ® ÇÁ¸®ÆÕ
+    public GameObject boomEffect;
 
     //public Transform myTr;
     void Awake()
@@ -117,6 +120,11 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet") //Àû ÃÑ¾Ë¿¡ ¸Â¾ÒÀ» ¶§ ½ÇÇà
         {
+            if (isHit)
+                return;
+
+            isHit = true;
+
             life--;
             if(life <= 0)
             {
@@ -132,7 +140,35 @@ public class PlayerCtrl : MonoBehaviour
         else if(collision.tag == "PowerItem") //¾ÆÀÌÅÛÀ» ¸Ô¾úÀ» ¶§
         {
             ++power;
+            score += 30;
         }
+        else if(collision.tag == "BoomItem")
+        {
+            score += 50;
+            boomEffect.SetActive(true); //ÆÄ±« ÀÌÆåÆ® ½ÇÇà
+            Invoke("BoomEffectOff", 2f);
+
+            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+            for(int i = 0;  i < enemys.Length; i++) //Àû °³Ã¼ ÆÄ±«
+            {
+                EnemyCtrl enemyLogic = enemys[i].GetComponent<EnemyCtrl>();
+                enemyLogic.OnHit(50);
+            }
+            GameObject[] enemyBullets = GameObject.FindGameObjectsWithTag("Enemy Bullet");
+            for (int i = 0; i < enemys.Length; i++) //Àû °³Ã¼ ÆÄ±«
+            {
+                Destroy(enemyBullets[i]);
+            }
+
+        }
+        else if(collision.tag == "Coin")
+        {
+            score += 500;
+        }
+    }
+    void BoomEffectOff()
+    {
+        boomEffect.SetActive(false);
     }
     void OnDisable()
     {

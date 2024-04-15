@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -91,6 +92,9 @@ public class GameManager : MonoBehaviour
     {
         player.transform.position = Vector3.down * 3.7f;
         player.SetActive(true);
+
+        PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
+        playerLogic.isHit = false;
     }
     public void UpdateLifeIcon(int life)
     {
@@ -106,9 +110,17 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
+        for (int i = 0; i < 3; i++) //생명 비활성화 후
+        {
+            lifeImages[i].color = new Color(1, 1, 1, 0);
+        }
         gameOverSet.SetActive(true);
     }
 
+    public void GameRetry()
+    {
+        SceneManager.LoadScene(0);
+    }
     IEnumerator EnemyPatern0() //1번째 적 비행기 패턴
     {
         SpawnEnemy0(1);

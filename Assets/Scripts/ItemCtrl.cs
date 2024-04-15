@@ -8,6 +8,9 @@ public class ItemCtrl : MonoBehaviour
     public Transform[] wayPoints; //베지어 포인트 이동경로
     public Transform[] cloneWayPoints; // 이동경로를 복사할 배열
 
+    public PlayerCtrl player;
+    public string itemType;
+
     private float t = 0f;
 
     // Start is called before the first frame update

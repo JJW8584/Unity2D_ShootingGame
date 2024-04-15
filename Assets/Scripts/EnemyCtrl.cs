@@ -117,7 +117,7 @@ public class EnemyCtrl : MonoBehaviour
         }
     }
 
-    void OnHit(int dmg) //피격 시 실행되는 메소드
+    public void OnHit(int dmg) //피격 시 실행되는 메소드
     {
         hp -= dmg;
 

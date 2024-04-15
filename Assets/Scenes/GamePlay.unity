@@ -509,6 +509,7 @@ MonoBehaviour:
   - {fileID: 1996062451}
   - {fileID: 615774014}
   maxSpawnDelay: 4
+  ScoreDelay: 0.1
   player: {fileID: 1603445500}
   scoreText: {fileID: 562328225}
   lifeImages:
@@ -2444,7 +2445,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -925927925
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2311659948842064771, guid: 6520dda4a70dfbf40a55b7af39ecda4e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2507,13 +2508,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   power: 1
+  boom: 0
   life: 3
   score: 0
+  isHit: 0
   Bullet_0: {fileID: 6607683983104249933, guid: 2b80fb631f5a085429c84afc0af88e99, type: 3}
   Bullet_1: {fileID: 6607683983104249933, guid: 42f2bece32e30a149aeaff3cf92494bf, type: 3}
   firePos: {fileID: 1227276564}
   gameManager: {fileID: 377291895}
   destructionEffectPrefab: {fileID: 7403265945427809582, guid: 2f4ededffa11ed44c925e14675d63578, type: 3}
+  boomEffect: {fileID: 5949883270427933433, guid: c41ae338b6acc5a42a706114428e4bfe, type: 3}
 --- !u!50 &1603445505
 Rigidbody2D:
   serializedVersion: 4
@@ -2765,7 +2769,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1822074097}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 377291895}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GameRetry
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1822074097
 MonoBehaviour:
   m_ObjectHideFlags: 0
