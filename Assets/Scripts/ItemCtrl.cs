@@ -16,7 +16,6 @@ public class ItemCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CalBazierStart();
     }
 
     // Update is called once per frame
@@ -31,7 +30,7 @@ public class ItemCtrl : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         t += Time.deltaTime / 6f;
@@ -41,11 +40,11 @@ public class ItemCtrl : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
-    void CalBazierStart()
+    public void CalBazierStart()
     {
         cloneWayPoints = new Transform[wayPoints.Length]; // 새로운 배열을 생성하지 않을 경우 아이템이 잘못된 좌표에 생성
         for (int i = 0; i < wayPoints.Length; i++)

@@ -39,6 +39,9 @@ public class EnemyCtrl : MonoBehaviour
     Quaternion _rot;
     float _angle;
     private float atkPoint;
+    private bool itemSpawn;
+
+    public ObjectManager objectManager;
 
     void Awake()
     {
@@ -116,9 +119,14 @@ public class EnemyCtrl : MonoBehaviour
                 break;
         }
     }
+    private void OnEnable()
+    {
+        itemSpawn = false;
+    }
 
     public void OnHit(int dmg) //피격 시 실행되는 메소드
     {
+
         hp -= dmg;
 
         spriteRenderer.sprite = sprites[1]; //피격 이펙트
@@ -129,37 +137,46 @@ public class EnemyCtrl : MonoBehaviour
             PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
             playerLogic.score += enemyScore;
             // 아이템 생성, 일정 확률로 아이템 생성
-            if (itemPrefab != null)
+            if (itemPrefab != null && !itemSpawn)
             {
                 int itemRand = Random.Range(0, 5);
-                if (enemyName != "A" && true)//itemRand == 0)
+                if (enemyName != "A")//itemRand == 0)
                 {
                     int randItemType = Random.Range(0, 10);
                     if (randItemType < 3)
                     {
-                        GameObject itemObj = Instantiate(itemPrefab[0], transform.position, Quaternion.identity);
+                        GameObject itemObj = objectManager.MakeObj("itemPower"); //Instantiate(itemPrefab[0], transform.position, Quaternion.identity);
+                        itemObj.transform.position = transform.position;
                         ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
                         itemControl.wayPoints = itemWayPoints;
+                        itemControl.CalBazierStart();
                     }
                     else if (randItemType < 8)
                     {
-                        GameObject itemObj = Instantiate(itemPrefab[1], transform.position, Quaternion.identity);
+                        GameObject itemObj = objectManager.MakeObj("itemCoin"); //Instantiate(itemPrefab[1], transform.position, Quaternion.identity);
+                        itemObj.transform.position = transform.position;
                         ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
                         itemControl.wayPoints = itemWayPoints;
+                        itemControl.CalBazierStart();
                     }
                     else
                     {
-                        GameObject itemObj = Instantiate(itemPrefab[2], transform.position, Quaternion.identity);
+                        GameObject itemObj = objectManager.MakeObj("itemBoom"); //Instantiate(itemPrefab[2], transform.position, Quaternion.identity);
+                        itemObj.transform.position = transform.position;
                         ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
                         itemControl.wayPoints = itemWayPoints;
+                        itemControl.CalBazierStart();
                     }
                 }
+                itemSpawn = false;
             }
             gameObject.SetActive(false);
             // 파괴 이펙트 생성
             if (destructionEffectPrefab != null)
             {
-                Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+                GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
+                destructionEffect.transform.position = transform.position;
+                //Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
             }
         }
     }
@@ -194,14 +211,22 @@ public class EnemyCtrl : MonoBehaviour
         {
             Vector3 dir = player.transform.position - transform.position; //총알을 플레이어 방향으로 회전
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
+            GameObject bulletObj;
             if (enemyName == "B")
             {
-                Instantiate(Bullet_0, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
+                bulletObj = objectManager.MakeObj("enemyBullet0");//Instantiate(Bullet_0, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
+                bulletObj.transform.position = transform.position;
+                bulletObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             }
             else if (enemyName == "C")
             {
-                Instantiate(Bullet_1, transform.position + Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
-                Instantiate(Bullet_1, transform.position - Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
+                bulletObj = objectManager.MakeObj("enemyBullet1"); //Instantiate(Bullet_1, transform.position + Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
+                bulletObj.transform.position = transform.position + Vector3.right * 0.3f;
+                bulletObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                bulletObj = objectManager.MakeObj("enemyBullet1");
+                bulletObj.transform.position = transform.position - Vector3.right * 0.3f;
+                bulletObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                //Instantiate(Bullet_1, transform.position - Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
             }
             curShotDelay = 0;
         }

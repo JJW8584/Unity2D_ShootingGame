@@ -18,6 +18,7 @@ public class DestroyCtrl : MonoBehaviour
 
     void AnimationEndEvent() //애니메이션이 1번 재생 후 실행
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        //Destroy(gameObject);
     }
 }

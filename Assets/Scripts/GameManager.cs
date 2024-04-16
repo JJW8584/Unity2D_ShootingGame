@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Transform[] MovePaternPoints0;
     public Transform[] MovePaternPoints1;
     public Transform[] itemWayPoints;
+    private int[] hpSet;
 
     public float maxSpawnDelay = 5f;
     private float curSpawnelay = 3f;
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
     {
         //StartCoroutine(this.GenerateEnemy());
         UpdateBoomIcon(0);
+        hpSet = new int[] { 1, 5, 15 };
     }
 
     // Update is called once per frame
@@ -68,7 +70,7 @@ public class GameManager : MonoBehaviour
             if(curScoreDelay >= ScoreDelay)
             {
                 playerLogic.score += 1;
-                curScoreDelay = 0.0f;
+                curScoreDelay = 0;
             }
 
         if (curSpawnelay >= maxSpawnDelay)
@@ -163,6 +165,8 @@ public class GameManager : MonoBehaviour
         enemyLogic.MovePaternPoints0 = MovePaternPoints0;
         enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 0;
+        enemyLogic.objectManager = objectManager;
+        enemyLogic.hp = hpSet[enemyType];
     }
     IEnumerator EnemyPatern1() //2번째 적 비행기 패턴
     {
@@ -187,8 +191,10 @@ public class GameManager : MonoBehaviour
         enemyLogic.MovePaternPoints1 = MovePaternPoints1;
         enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 1;
+        enemyLogic.objectManager = objectManager;
+        enemyLogic.hp = hpSet[enemyType];
     }
-    IEnumerator EnemyPatern2(int spawnPoint)
+    IEnumerator EnemyPatern2(int spawnPoint) //3번째 패턴
     {
         GameObject enemy = objectManager.MakeObj(enemyObj[2]);
         //Instantiate(enemyObjs[2], spawnPoints[spawnPoint].position, Quaternion.identity);
@@ -198,6 +204,8 @@ public class GameManager : MonoBehaviour
         enemyLogic.player = player;
         enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 2;
+        enemyLogic.objectManager = objectManager;
+        enemyLogic.hp = hpSet[2];
         yield return null;
     }
 /*    void CreateEnemy(int a)

@@ -22,10 +22,10 @@ public class BulletCtrl : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Bullet Border") //화면 밖 보더에 닿을 시 파괴
-            Destroy(gameObject);
+            gameObject.SetActive(false);//Destroy(gameObject);
         else if (gameObject.tag == "Bullet" && collision.gameObject.tag == "Enemy") //적과 충돌 시 파괴
-            Destroy(gameObject);
+            gameObject.SetActive(false);//Destroy(gameObject);
         else if (gameObject.tag == "Enemy Bullet" && collision.gameObject.tag == "Player") //플레이어가 맞을 시 파괴
-            Destroy(gameObject);
+            gameObject.SetActive(false);
     }
 }
