@@ -6,11 +6,12 @@ using UnityEngine;
 public class PlayerCtrl : MonoBehaviour
 {
     public int speed = 10;
-    public int power = 1;
-    public int boom;
+    public int power = 1; //3레벨이 최대
+    public int boom = 0; //3개가 최대
     public int life = 3;
     public int score = 0;
     public bool isHit;
+    public bool isBoomTime = false;
 
     public GameObject Bullet_0;
     public GameObject Bullet_1;
@@ -42,7 +43,8 @@ public class PlayerCtrl : MonoBehaviour
     void Update()
     {
         PlayerMove();
-        Fire();        
+        Fire();
+        Boom();
     }
 
     void PlayerMove()
@@ -116,6 +118,35 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
+    void Boom()
+    {
+        if(Input.GetMouseButton(1))
+        {
+            if (boom > 0)
+            {
+                if (!isBoomTime)
+                {
+                    --boom;
+                    gameManager.UpdateBoomIcon(boom);
+                    isBoomTime = true;
+                    boomEffect.SetActive(true); //파괴 이펙트 실행
+                    Invoke("BoomEffectOff", 2f);
+
+                    GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+                    for (int i = 0; i < enemys.Length; i++) //적 개체 파괴
+                    {
+                        EnemyCtrl enemyLogic = enemys[i].GetComponent<EnemyCtrl>();
+                        enemyLogic.OnHit(100);
+                    }
+                    GameObject[] enemyBullets = GameObject.FindGameObjectsWithTag("Enemy Bullet");
+                    for (int i = 0; i < enemys.Length; i++) //적 총알
+                    {
+                        Destroy(enemyBullets[i]);
+                    }
+                }
+            }
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet") //적 총알에 맞았을 때 실행
@@ -135,6 +166,10 @@ public class PlayerCtrl : MonoBehaviour
                 gameManager.UpdateLifeIcon(life);
             }
             gameObject.SetActive(false); //비활성화
+            if (destructionEffectPrefab != null) // 파괴 이펙트 생성
+            {
+                Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+            }
             gameManager.RespawnPlayer(); //2초 후 부활
         }
         else if(collision.tag == "PowerItem") //아이템을 먹었을 때
@@ -144,22 +179,9 @@ public class PlayerCtrl : MonoBehaviour
         }
         else if(collision.tag == "BoomItem")
         {
+            boom = boom < 3 ? ++boom : 3;
+            gameManager.UpdateBoomIcon(boom);
             score += 50;
-            boomEffect.SetActive(true); //파괴 이펙트 실행
-            Invoke("BoomEffectOff", 2f);
-
-            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
-            for(int i = 0;  i < enemys.Length; i++) //적 개체 파괴
-            {
-                EnemyCtrl enemyLogic = enemys[i].GetComponent<EnemyCtrl>();
-                enemyLogic.OnHit(50);
-            }
-            GameObject[] enemyBullets = GameObject.FindGameObjectsWithTag("Enemy Bullet");
-            for (int i = 0; i < enemys.Length; i++) //적 개체 파괴
-            {
-                Destroy(enemyBullets[i]);
-            }
-
         }
         else if(collision.tag == "Coin")
         {
@@ -169,13 +191,6 @@ public class PlayerCtrl : MonoBehaviour
     void BoomEffectOff()
     {
         boomEffect.SetActive(false);
-    }
-    void OnDisable()
-    {
-        // 파괴 이펙트 생성
-        if (destructionEffectPrefab != null)
-        {
-            Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
-        }
+        isBoomTime = false;
     }
 }

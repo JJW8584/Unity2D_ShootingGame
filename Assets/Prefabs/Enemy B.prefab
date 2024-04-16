@@ -192,10 +192,13 @@ MonoBehaviour:
   Bullet_0: {fileID: 6607683983104249933, guid: bac1d6a27d448df49b446acc0006cd72, type: 3}
   Bullet_1: {fileID: 6607683983104249933, guid: 3e6ec13e0adaf064ab6ad9335ca3ec2d, type: 3}
   player: {fileID: 0}
-  maxShotDelay: 1.86245
-  curShotDelay: 0.8
+  maxShotDelay: 1.5
+  curShotDelay: 0.7
   destructionEffectPrefab: {fileID: 7403265945427809582, guid: 2f4ededffa11ed44c925e14675d63578, type: 3}
-  itemPrefab: {fileID: 8544358411537466063, guid: a1b866fd2e1e7c74cbe3dd7fe237404c, type: 3}
+  itemPrefab:
+  - {fileID: 8544358411537466063, guid: a1b866fd2e1e7c74cbe3dd7fe237404c, type: 3}
+  - {fileID: 8544358411537466063, guid: 53aaaa83f51423447ba997ec17ea76c1, type: 3}
+  - {fileID: 8544358411537466063, guid: 10c26def524fdf64c9737bf55e78b439, type: 3}
   iter: 0
   targetTr: {fileID: 0}
   b_Type: 0

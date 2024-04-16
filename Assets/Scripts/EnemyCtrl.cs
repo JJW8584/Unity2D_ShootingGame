@@ -31,7 +31,7 @@ public class EnemyCtrl : MonoBehaviour
     SpriteRenderer spriteRenderer;
 
     public GameObject destructionEffectPrefab; // 파괴 이펙트 프리팹
-    public GameObject itemPrefab; // 아이템 프리팹
+    public GameObject[] itemPrefab; // 아이템 프리팹
 
     public int iter = 0;
     public Transform targetTr;
@@ -128,7 +128,39 @@ public class EnemyCtrl : MonoBehaviour
         {
             PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
             playerLogic.score += enemyScore;
-            Destroy(gameObject);
+            // 아이템 생성, 일정 확률로 아이템 생성
+            if (itemPrefab != null)
+            {
+                int itemRand = Random.Range(0, 5);
+                if (enemyName != "A" && true)//itemRand == 0)
+                {
+                    int randItemType = Random.Range(0, 10);
+                    if (randItemType < 3)
+                    {
+                        GameObject itemObj = Instantiate(itemPrefab[0], transform.position, Quaternion.identity);
+                        ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
+                        itemControl.wayPoints = itemWayPoints;
+                    }
+                    else if (randItemType < 8)
+                    {
+                        GameObject itemObj = Instantiate(itemPrefab[1], transform.position, Quaternion.identity);
+                        ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
+                        itemControl.wayPoints = itemWayPoints;
+                    }
+                    else
+                    {
+                        GameObject itemObj = Instantiate(itemPrefab[2], transform.position, Quaternion.identity);
+                        ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
+                        itemControl.wayPoints = itemWayPoints;
+                    }
+                }
+            }
+            gameObject.SetActive(false);
+            // 파괴 이펙트 생성
+            if (destructionEffectPrefab != null)
+            {
+                Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
+            }
         }
     }
 
@@ -256,25 +288,5 @@ public class EnemyCtrl : MonoBehaviour
             transform.Translate(Vector2.down * speed * Time.deltaTime);
         }
         yield return null;
-    }
-    private void OnDestroy()
-    {
-        // 파괴 이펙트 생성
-        if (destructionEffectPrefab != null)
-        {
-            Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
-        }
-
-        // 아이템 생성, 일정 확률로 아이템 생성
-        if (itemPrefab != null)
-        {
-            int itemRand = Random.Range(0, 10);
-            if (itemRand == 0)
-            {
-                GameObject itemObj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
-                ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
-                itemControl.wayPoints = itemWayPoints;
-            }
-        }
     }
 }

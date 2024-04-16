@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     public GameObject[] enemyObjs;
+    public string[] enemyObj;
     public Transform[] spawnPoints;
     public Transform[] MovePaternPoints0;
     public Transform[] MovePaternPoints1;
@@ -22,12 +24,14 @@ public class GameManager : MonoBehaviour
     public float ScoreDelay = 0.1f;
     private float curScoreDelay = 0.0f;
 
-    private int maxEnemy = 10;
     public GameObject player;
 
     public TextMeshProUGUI scoreText; //UI
     public Image[] lifeImages;
+    public Image[] boomImages;
     public GameObject gameOverSet;
+
+    public ObjectManager objectManager;
 /*    public GameObject enemy1;
     public GameObject enemy2;
     public GameObject enemy3;
@@ -42,11 +46,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        enemyObj = new string[] { "enemyA", "enemyB", "enemyC" };
     }
     // Start is called before the first frame update
     void Start()
     {
         //StartCoroutine(this.GenerateEnemy());
+        UpdateBoomIcon(0);
     }
 
     // Update is called once per frame
@@ -58,11 +64,12 @@ public class GameManager : MonoBehaviour
 
         curSpawnelay += Time.deltaTime;
         curScoreDelay += Time.deltaTime;
-        if(curScoreDelay >= ScoreDelay)
-        {
-            playerLogic.score += 1;
-            curScoreDelay = 0.0f;
-        }
+        if (player.activeSelf)
+            if(curScoreDelay >= ScoreDelay)
+            {
+                playerLogic.score += 1;
+                curScoreDelay = 0.0f;
+            }
 
         if (curSpawnelay >= maxSpawnDelay)
         {
@@ -108,6 +115,18 @@ public class GameManager : MonoBehaviour
             lifeImages[i].color = new Color(1, 1, 1, 1);
         }
     }
+    public void UpdateBoomIcon(int boom)
+    {
+        for (int i = 0; i < 3; i++) //생명 비활성화 후
+        {
+            boomImages[i].color = new Color(1, 1, 1, 0);
+        }
+
+        for (int i = 0; i < boom; i++) //남아있는 만큼만 활성화
+        {
+            boomImages[i].color = new Color(1, 1, 1, 1);
+        }
+    }
     public void GameOver()
     {
         for (int i = 0; i < 3; i++) //생명 비활성화 후
@@ -135,7 +154,10 @@ public class GameManager : MonoBehaviour
     }
     void SpawnEnemy0(int enemyType) //1번째 패턴 적 생성
     {
-        GameObject enemy = Instantiate(enemyObjs[enemyType], spawnPoints[0].position, Quaternion.identity);
+        GameObject enemy = objectManager.MakeObj(enemyObj[enemyType]);
+        //Instantiate(enemyObjs[enemyType], spawnPoints[0].position, Quaternion.identity);
+        enemy.transform.position = spawnPoints[0].position;
+
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //객체 생성 후 값 전달
         enemyLogic.player = player;
         enemyLogic.MovePaternPoints0 = MovePaternPoints0;
@@ -156,7 +178,10 @@ public class GameManager : MonoBehaviour
     }
     void SpawnEnemy1(int enemyType) //2번째 패턴 적 생성
     {
-        GameObject enemy = Instantiate(enemyObjs[enemyType], spawnPoints[1].position, Quaternion.identity);
+        GameObject enemy = objectManager.MakeObj(enemyObj[enemyType]);
+        //Instantiate(enemyObjs[enemyType], spawnPoints[1].position, Quaternion.identity);
+        enemy.transform.position = spawnPoints[1].position;
+
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //생성 후 값 전달
         enemyLogic.player = player;
         enemyLogic.MovePaternPoints1 = MovePaternPoints1;
@@ -165,7 +190,10 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator EnemyPatern2(int spawnPoint)
     {
-        GameObject enemy = Instantiate(enemyObjs[2], spawnPoints[spawnPoint].position, Quaternion.identity);
+        GameObject enemy = objectManager.MakeObj(enemyObj[2]);
+        //Instantiate(enemyObjs[2], spawnPoints[spawnPoint].position, Quaternion.identity);
+        enemy.transform.position = spawnPoints[spawnPoint].position;
+
         EnemyCtrl enemyLogic = enemy.GetComponent <EnemyCtrl>();
         enemyLogic.player = player;
         enemyLogic.itemWayPoints = itemWayPoints;
