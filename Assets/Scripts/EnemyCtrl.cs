@@ -16,7 +16,6 @@ public class EnemyCtrl : MonoBehaviour
     public Sprite[] sprites;
     public Transform[] MovePaternPoints0;
     public Transform[] MovePaternPoints1;
-    public Transform[] itemWayPoints;
 
     [SerializeField] private int Type; //플레이어 방향으로 이동
     private Transform target;
@@ -24,6 +23,8 @@ public class EnemyCtrl : MonoBehaviour
     public GameObject Bullet_0;
     public GameObject Bullet_1;
     public GameObject player;
+
+    Quaternion _rot;
 
     public float maxShotDelay;
     public float curShotDelay;
@@ -36,7 +37,6 @@ public class EnemyCtrl : MonoBehaviour
     public int iter = 0;
     public Transform targetTr;
     [SerializeField] private int b_Type;
-    Quaternion _rot;
     float _angle;
     private float atkPoint;
     private bool itemSpawn;
@@ -147,37 +147,24 @@ public class EnemyCtrl : MonoBehaviour
                     {
                         GameObject itemObj = objectManager.MakeObj("itemPower"); //Instantiate(itemPrefab[0], transform.position, Quaternion.identity);
                         itemObj.transform.position = transform.position;
-                        ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
-                        itemControl.wayPoints = itemWayPoints;
-                        itemControl.CalBazierStart();
                     }
                     else if (randItemType < 8)
                     {
                         GameObject itemObj = objectManager.MakeObj("itemCoin"); //Instantiate(itemPrefab[1], transform.position, Quaternion.identity);
                         itemObj.transform.position = transform.position;
-                        ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
-                        itemControl.wayPoints = itemWayPoints;
-                        itemControl.CalBazierStart();
                     }
                     else
                     {
                         GameObject itemObj = objectManager.MakeObj("itemBoom"); //Instantiate(itemPrefab[2], transform.position, Quaternion.identity);
                         itemObj.transform.position = transform.position;
-                        ItemCtrl itemControl = itemObj.GetComponent<ItemCtrl>();
-                        itemControl.wayPoints = itemWayPoints;
-                        itemControl.CalBazierStart();
                     }
                 }
                 itemSpawn = false;
             }
             gameObject.SetActive(false);
             // 파괴 이펙트 생성
-            if (destructionEffectPrefab != null)
-            {
-                GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
-                destructionEffect.transform.position = transform.position;
-                //Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
-            }
+            GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
+            destructionEffect.transform.position = transform.position;
         }
     }
 

@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public Transform[] spawnPoints;
     public Transform[] MovePaternPoints0;
     public Transform[] MovePaternPoints1;
-    public Transform[] itemWayPoints;
     private int[] hpSet;
 
     public float maxSpawnDelay = 5f;
@@ -33,10 +32,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverSet;
 
     public ObjectManager objectManager;
-/*    public GameObject enemy1;
-    public GameObject enemy2;
-    public GameObject enemy3;
-*/
+
     private void Awake()
     {
         if (Instance == null) //싱글턴 오브젝트 생성
@@ -52,7 +48,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartCoroutine(this.GenerateEnemy());
         UpdateBoomIcon(0);
         hpSet = new int[] { 1, 5, 15 };
     }
@@ -163,7 +158,6 @@ public class GameManager : MonoBehaviour
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //객체 생성 후 값 전달
         enemyLogic.player = player;
         enemyLogic.MovePaternPoints0 = MovePaternPoints0;
-        enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 0;
         enemyLogic.objectManager = objectManager;
         enemyLogic.hp = hpSet[enemyType];
@@ -189,7 +183,6 @@ public class GameManager : MonoBehaviour
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //생성 후 값 전달
         enemyLogic.player = player;
         enemyLogic.MovePaternPoints1 = MovePaternPoints1;
-        enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 1;
         enemyLogic.objectManager = objectManager;
         enemyLogic.hp = hpSet[enemyType];
@@ -202,48 +195,9 @@ public class GameManager : MonoBehaviour
 
         EnemyCtrl enemyLogic = enemy.GetComponent <EnemyCtrl>();
         enemyLogic.player = player;
-        enemyLogic.itemWayPoints = itemWayPoints;
         enemyLogic.paternType = 2;
         enemyLogic.objectManager = objectManager;
         enemyLogic.hp = hpSet[2];
         yield return null;
     }
-/*    void CreateEnemy(int a)
-    {
-        switch(a)
-        {
-            case 0:
-                GameObject.Instantiate(enemy1);
-                break;
-            case 1:
-                GameObject.Instantiate(enemy2);
-                break;
-            case 2:
-                GameObject.Instantiate(enemy3);
-                break;
-        }
-    }
-    IEnumerator GenerateEnemy()
-    {
-        yield return new WaitForSeconds(2f);
-
-        int numEnemy = (int)GameObject.FindGameObjectsWithTag("Enemy").Length;
-        Vector2 pos = new Vector2(Random.Range(-2.5f, 2.5f), 6.5f);
-        int type = Random.Range(0, 6);
-        if (numEnemy < maxEnemy)
-        {
-            if (type == 0)
-            {
-                Instantiate(enemy3, pos, Quaternion.identity);
-            }
-            else if (type == 1)
-            {
-                Instantiate(enemy2, pos, Quaternion.identity);
-            }
-            else
-            {
-                Instantiate(enemy1, pos, Quaternion.identity);
-            }
-        }
-    }
-*/}
+}

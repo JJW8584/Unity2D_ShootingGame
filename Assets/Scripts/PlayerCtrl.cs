@@ -146,16 +146,51 @@ public class PlayerCtrl : MonoBehaviour
                     boomEffect.SetActive(true); //ÆÄ±« ÀÌÆåÆ® ½ÇÇà
                     Invoke("BoomEffectOff", 2f);
 
-                    GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
-                    for (int i = 0; i < enemys.Length; i++) //Àû °³Ã¼ ÆÄ±«
+                    //Àû °³Ã¼ ÆÄ±«
+                    GameObject[] enemyA = objectManager.GetPool("enemyA");
+                    GameObject[] enemyB = objectManager.GetPool("enemyB");
+                    GameObject[] enemyC = objectManager.GetPool("enemyC");
+                    for (int i = 0; i < enemyA.Length; i++) 
                     {
-                        EnemyCtrl enemyLogic = enemys[i].GetComponent<EnemyCtrl>();
-                        enemyLogic.OnHit(100);
+                        if (enemyA[i].activeSelf)
+                        {
+                            EnemyCtrl enemyLogic = enemyA[i].GetComponent<EnemyCtrl>();
+                            enemyLogic.OnHit(100);
+                        }
                     }
-                    GameObject[] enemyBullets = GameObject.FindGameObjectsWithTag("Enemy Bullet");
-                    for (int i = 0; i < enemyBullets.Length; i++) //Àû ÃÑ¾Ë
+                    for (int i = 0; i < enemyB.Length; i++) 
                     {
-                        enemyBullets[i].SetActive(false);
+                        if (enemyB[i].activeSelf)
+                        {
+                            EnemyCtrl enemyLogic = enemyB[i].GetComponent<EnemyCtrl>();
+                            enemyLogic.OnHit(100);
+                        }
+                    }
+                    for (int i = 0; i < enemyC.Length; i++) 
+                    {
+                        if (enemyC[i].activeSelf)
+                        {
+                            EnemyCtrl enemyLogic = enemyC[i].GetComponent<EnemyCtrl>();
+                            enemyLogic.OnHit(100);
+                        }
+                    }
+
+                    //Àû ÃÑ¾Ë
+                    GameObject[] enemyBullets0 = objectManager.GetPool("enemyBullet0");
+                    GameObject[] enemyBullets1 = objectManager.GetPool("enemyBullet1");
+                    for (int i = 0; i < enemyBullets0.Length; i++)
+                    {
+                        if (enemyBullets0[i].activeSelf)
+                        {
+                            enemyBullets0[i].SetActive(false);
+                        }
+                    }
+                    for (int i = 0; i < enemyBullets1.Length; i++)
+                    {
+                        if (enemyBullets1[i].activeSelf)
+                        {
+                            enemyBullets0[i].SetActive(false);
+                        }
                     }
                 }
             }

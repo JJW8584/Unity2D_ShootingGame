@@ -15,6 +15,7 @@ public class ObjectManager : MonoBehaviour
     public GameObject enemyBullet0Prefab;
     public GameObject enemyBullet1Prefab;
     public GameObject destroyEffectPrefab;
+    public Transform[] itemWayPoints;
 
     GameObject[] enemyA;
     GameObject[] enemyB;
@@ -76,16 +77,22 @@ public class ObjectManager : MonoBehaviour
         for (int i = 0; i < itemBoom.Length; i++)
         {
             itemBoom[i] = Instantiate(itemBoomPrefab);
+            ItemCtrl itemLogic = itemBoom[i].GetComponent<ItemCtrl>();
+            itemLogic.wayPoints = (Transform[])itemWayPoints.Clone();
             itemBoom[i].SetActive(false);
         }
         for (int i = 0; i < itemCoin.Length; i++)
         {
             itemCoin[i] = Instantiate(itemCoinPrefab);
+            ItemCtrl itemLogic = itemCoin[i].GetComponent<ItemCtrl>();
+            itemLogic.wayPoints = (Transform[])itemWayPoints.Clone();
             itemCoin[i].SetActive(false);
         }
         for (int i = 0; i < itemPower.Length; i++)
         {
             itemPower[i] = Instantiate(itemPowerPrefab);
+            ItemCtrl itemLogic = itemPower[i].GetComponent<ItemCtrl>();
+            itemLogic.wayPoints = (Transform[])itemWayPoints.Clone();
             itemPower[i].SetActive(false);
         }
 
@@ -168,5 +175,46 @@ public class ObjectManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public GameObject[] GetPool(string Type)
+    {
+        switch (Type)
+        {
+            case "enemyA":
+                targetPool = enemyA;
+                break;
+            case "enemyB":
+                targetPool = enemyB;
+                break;
+            case "enemyC":
+                targetPool = enemyC;
+                break;
+            case "itemBoom":
+                targetPool = itemBoom;
+                break;
+            case "itemCoin":
+                targetPool = itemCoin;
+                break;
+            case "itemPower":
+                targetPool = itemPower;
+                break;
+            case "playerBullet0":
+                targetPool = playerBullet0;
+                break;
+            case "playerBullet1":
+                targetPool = playerBullet1;
+                break;
+            case "enemyBullet0":
+                targetPool = enemyBullet0;
+                break;
+            case "enemyBullet1":
+                targetPool = enemyBullet1;
+                break;
+            case "destroyEffect":
+                targetPool = destroyEffect;
+                break;
+        }
+        return targetPool;
     }
 }

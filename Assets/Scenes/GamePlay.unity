@@ -395,7 +395,7 @@ Transform:
   m_GameObject: {fileID: 333656824}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.796039, y: -0.26478297, z: -0.012687756}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -505,11 +505,6 @@ MonoBehaviour:
   - {fileID: 994715614}
   - {fileID: 106573752}
   - {fileID: 1714020773}
-  itemWayPoints:
-  - {fileID: 1891526058}
-  - {fileID: 123612363}
-  - {fileID: 1996062451}
-  - {fileID: 615774014}
   maxSpawnDelay: 4
   ScoreDelay: 0.1
   player: {fileID: 1603445500}
@@ -1247,7 +1242,7 @@ Transform:
   m_GameObject: {fileID: 676987604}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.796039, y: -0.26478297, z: -0.012687756}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1765,7 +1760,7 @@ Transform:
   m_GameObject: {fileID: 1206714713}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.796039, y: 0.26478297, z: 0.012687756}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2403,7 +2398,7 @@ Transform:
   m_GameObject: {fileID: 1387803443}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.796039, y: -0.26478297, z: -0.012687756}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2736,6 +2731,11 @@ MonoBehaviour:
   enemyBullet0Prefab: {fileID: 6607683983104249933, guid: bac1d6a27d448df49b446acc0006cd72, type: 3}
   enemyBullet1Prefab: {fileID: 6607683983104249933, guid: 3e6ec13e0adaf064ab6ad9335ca3ec2d, type: 3}
   destroyEffectPrefab: {fileID: 7403265945427809582, guid: 2f4ededffa11ed44c925e14675d63578, type: 3}
+  itemWayPoints:
+  - {fileID: 1891526058}
+  - {fileID: 123612363}
+  - {fileID: 1996062451}
+  - {fileID: 615774014}
 --- !u!4 &1493294668
 Transform:
   m_ObjectHideFlags: 0
