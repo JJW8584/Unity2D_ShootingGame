@@ -125,7 +125,7 @@ MonoBehaviour:
   enemyScore: 5000
   speed: 1.5
   hp: 2000
-  paternType: 0
+  paternType: 3
   sprites: []
   MovePaternPoints0: []
   MovePaternPoints1: []

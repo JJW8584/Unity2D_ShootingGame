@@ -7,9 +7,9 @@ public class BazierTest : MonoBehaviour
     public Transform[] wayPoints; //각 점
     private Vector2 gizmosPosition;
 
-   /* private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        for (int i = 0; i < 13; i += 4)
+        for (int i = 0; i < wayPoints.Length; i += 4)
         {
             for (float t = 0; t < 1; t += 0.02f) //베지에 곡선 그리기
             {
@@ -27,7 +27,7 @@ public class BazierTest : MonoBehaviour
             Gizmos.DrawLine(new Vector2(wayPoints[i + 2].position.x, wayPoints[i + 2].position.y),
                             new Vector2(wayPoints[i + 3].position.x, wayPoints[i + 3].position.y));
         }
-    }*/
+    }
 
     // Start is called before the first frame update
     void Start()

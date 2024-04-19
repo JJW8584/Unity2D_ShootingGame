@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   b_speed: 10
   dmg: 3
+  isRotate: 0
 --- !u!61 &-3171974853042267078
 BoxCollider2D:
   m_ObjectHideFlags: 0

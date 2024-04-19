@@ -16,6 +16,7 @@ public class EnemyCtrl : MonoBehaviour
     public Sprite[] sprites;
     public Transform[] MovePaternPoints0;
     public Transform[] MovePaternPoints1;
+    public Transform[] bossWayPoints;
 
     [SerializeField] private int Type; //플레이어 방향으로 이동
     private Transform target;
@@ -41,8 +42,10 @@ public class EnemyCtrl : MonoBehaviour
     float _angle;
     private float atkPoint;
     private bool itemSpawn;
+    private int bossPatern;
 
     public ObjectManager objectManager;
+    public GameManager gameManager;
 
     void Awake()
     {
@@ -61,9 +64,8 @@ public class EnemyCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemyName == "Boss")
-            return;
-        FireToPlayer();
+        if(enemyName != "Boss")
+            FireToPlayer();
         switch (paternType)
         {
             case 0:
@@ -76,6 +78,9 @@ public class EnemyCtrl : MonoBehaviour
                 atkPoint = 2.5f;
                 StartCoroutine(EnemyMovePatern0());
                 break;
+            case 3: //boss patern
+                StartCoroutine(BossPatern());
+                break;
         }
     }
     private void OnEnable()
@@ -85,6 +90,8 @@ public class EnemyCtrl : MonoBehaviour
 
     public void OnHit(int dmg) //피격 시 실행되는 메소드
     {
+        if (hp <= 0)
+            return;
 
         hp -= dmg;
 
@@ -100,23 +107,21 @@ public class EnemyCtrl : MonoBehaviour
 
         if(hp <= 0)
         {
-            PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
-            playerLogic.score += enemyScore;
+             gameManager.score += enemyScore;
             // 아이템 생성, 일정 확률로 아이템 생성
             if (itemPrefab != null && !itemSpawn)
             {
-                int itemRand = Random.Range(0, 3);
+                int itemRand = Random.Range(0, 20);
                 if (enemyName == "Boss")
                     itemRand = 1;
-                if (enemyName != "A" && itemRand == 0)
+                if (enemyName != "A" && itemRand < 10)
                 {
-                    int randItemType = Random.Range(0, 10);
-                    if (randItemType < 3)
+                    if (itemRand < 3)
                     {
                         GameObject itemObj = objectManager.MakeObj("itemPower");
                         itemObj.transform.position = transform.position;
                     }
-                    else if (randItemType < 8)
+                    else if (itemRand < 8)
                     {
                         GameObject itemObj = objectManager.MakeObj("itemCoin"); 
                         itemObj.transform.position = transform.position;
@@ -262,6 +267,47 @@ public class EnemyCtrl : MonoBehaviour
         else
         {
             transform.Translate(Vector2.down * speed * Time.deltaTime);
+        }
+        yield return null;
+    }
+
+    IEnumerator BossPatern()
+    {
+        if ((transform.position.y > 2.5f))
+        {
+            transform.Translate(Vector2.down * speed * Time.deltaTime);
+        }
+        else
+        {
+            float t = 0f;
+            while (true)
+            {
+                bossWayPoints[1].transform.position = new Vector3(4f, Random.Range(1f, 4f));
+                bossWayPoints[2].transform.position = new Vector3(-4f, Random.Range(1f, 4f));
+                while (t < 1f)
+                {
+                    transform.position = Mathf.Pow(1 - t, 3) * bossWayPoints[0].position  //베지어 곡선을 따라 이동
+                            + 3 * t * Mathf.Pow(1 - t, 2) * bossWayPoints[1].position
+                            + 3 * Mathf.Pow(t, 2) * (1 - t) * bossWayPoints[2].position
+                            + Mathf.Pow(t, 3) * bossWayPoints[3].position;
+                    t += Time.deltaTime / 4f;
+                    yield return null;
+                }
+                t = 0f;
+                yield return null;
+            }
+            /*            if (bossPatern == 1)
+                        {
+                            for (int i = 0; i < 50; ++i) //확산탄
+                            {
+                                GameObject bulletObj;
+                                bulletObj = objectManager.MakeObj("bossBullet0");
+                                bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 3.0f));
+                                //총알 생성시 각도 조절, 각도는 z방향 회전, Quaternion 오일러 값
+                            }
+                            ++bossPatern;
+                        }
+            */
         }
         yield return null;
     }

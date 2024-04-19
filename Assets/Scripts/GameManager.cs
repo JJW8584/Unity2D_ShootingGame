@@ -16,11 +16,13 @@ public class GameManager : MonoBehaviour
     public Transform[] spawnPoints;
     public Transform[] MovePaternPoints0;
     public Transform[] MovePaternPoints1;
+    public Transform[] bossWayPoints;
     private int[] hpSet;
 
     public float maxSpawnDelay = 5f;
     private float curSpawnelay = 3f;
 
+    public int score = 0;
     public float ScoreDelay = 0.1f;
     private float curScoreDelay = 0.0f;
 
@@ -57,18 +59,17 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //UI 업데이트
-        PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
-        scoreText.text = string.Format("{0:n0}", playerLogic.score);
+        scoreText.text = string.Format("{0:n0}", score);
 
         curSpawnelay += Time.deltaTime;
         curScoreDelay += Time.deltaTime;
         if (player.activeSelf)
             if(curScoreDelay >= ScoreDelay)
             {
-                playerLogic.score += 1;
+                score += 1;
                 curScoreDelay = 0;
             }
-        if (playerLogic.score < 3000)
+        if (score < 5000)
         {
             if (curSpawnelay >= maxSpawnDelay)
             {
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviour
         }
         else if (!isBossSpawn)
         {
-            SpawnBoss();
+            StartCoroutine(SpawnBoss());
             isBossSpawn = true;
         }
     }
@@ -167,6 +168,7 @@ public class GameManager : MonoBehaviour
         enemyLogic.MovePaternPoints0 = MovePaternPoints0;
         enemyLogic.paternType = 0;
         enemyLogic.objectManager = objectManager;
+        enemyLogic.gameManager = this;
         enemyLogic.hp = hpSet[enemyType] * player.GetComponent<PlayerCtrl>().power * 2;
     }
     IEnumerator EnemyPatern1() //2번째 적 비행기 패턴
@@ -191,6 +193,7 @@ public class GameManager : MonoBehaviour
         enemyLogic.MovePaternPoints1 = MovePaternPoints1;
         enemyLogic.paternType = 1;
         enemyLogic.objectManager = objectManager;
+        enemyLogic.gameManager = this;
         enemyLogic.hp = hpSet[enemyType] * player.GetComponent<PlayerCtrl>().power * 2;
     }
     IEnumerator EnemyPatern2(int spawnPoint) //3번째 패턴
@@ -202,11 +205,12 @@ public class GameManager : MonoBehaviour
         enemyLogic.player = player;
         enemyLogic.paternType = 2;
         enemyLogic.objectManager = objectManager;
+        enemyLogic.gameManager = this;
         enemyLogic.hp = hpSet[2] * player.GetComponent<PlayerCtrl>().power * 2;
         yield return null;
     }
 
-    void SpawnBoss()
+    IEnumerator SpawnBoss()
     {
         GameObject enemy = objectManager.MakeObj(enemyObj[3]);
         enemy.transform.position = spawnPoints[4].position;
@@ -214,5 +218,9 @@ public class GameManager : MonoBehaviour
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>();
         enemyLogic.player = player;
         enemyLogic.objectManager = objectManager;
+        enemyLogic.gameManager = this;
+        enemyLogic.paternType = 3;
+        enemyLogic.bossWayPoints = bossWayPoints;
+        yield return null;
     }
 }

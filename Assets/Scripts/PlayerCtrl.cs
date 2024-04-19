@@ -10,7 +10,6 @@ public class PlayerCtrl : MonoBehaviour
     public int power = 1; //3레벨이 최대
     public int boom = 0; //3개가 최대
     public int life = 3;
-    public int score = 0;
     public bool isHit;
     public bool isBoomTime = false;
 
@@ -236,17 +235,17 @@ public class PlayerCtrl : MonoBehaviour
             power = power > 4 ? 4 : power;
             if (power > 3)
                 powerIter = 0;
-            score += 30;
+            gameManager.score += 30;
         }
         else if(collision.tag == "BoomItem")
         {
             boom = boom < 3 ? ++boom : 3;
             gameManager.UpdateBoomIcon(boom);
-            score += 50;
+            gameManager.score += 50;
         }
         else if(collision.tag == "Coin")
         {
-            score += 500;
+            gameManager.score += 500;
         }
     }
     void BoomEffectOff()

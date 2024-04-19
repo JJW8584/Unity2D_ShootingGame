@@ -20,6 +20,7 @@ public class ObjectManager : MonoBehaviour
     public GameObject bossBullet0Prefab;
     public GameObject bossBullet1Prefab;
     public GameObject destroyEffectPrefab;
+
     public Transform[] itemWayPoints;
 
     GameObject[] enemyA;
@@ -59,7 +60,7 @@ public class ObjectManager : MonoBehaviour
         followerBullet = new GameObject[50];
         enemyBullet0 = new GameObject[100];
         enemyBullet1 = new GameObject[100];
-        bossBullet0 = new GameObject[50];
+        bossBullet0 = new GameObject[200];
         bossBullet1 = new GameObject[200];
 
         destroyEffect = new GameObject[40];
