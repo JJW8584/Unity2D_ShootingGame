@@ -30,6 +30,7 @@ public class EnemyCtrl : MonoBehaviour
     public float curShotDelay;
 
     SpriteRenderer spriteRenderer;
+    Animator anim;
 
     public GameObject destructionEffectPrefab; // 파괴 이펙트 프리팹
     public GameObject[] itemPrefab; // 아이템 프리팹
@@ -46,6 +47,9 @@ public class EnemyCtrl : MonoBehaviour
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if(enemyName == "Boss")
+            anim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
@@ -57,53 +61,8 @@ public class EnemyCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        /*iter++;
-        if (transform.position.y > atkPoint)
-        {
-            switch (Type)
-            {
-                case 1:
-                    transform.Translate(Vector2.down * speed * Time.deltaTime, Space.World);
-                    break;
-                case 2:
-                    transform.rotation = _rot;
-                    transform.Translate(Vector2.down * speed * Time.deltaTime, Space.World);
-                    break;
-                case 3:
-                    MoveToPlayer();
-                    break;
-                default:
-                    break;
-
-            }
-        }
-        else
-        {
-            if (iter / 120 > 5)
-            {
-                switch (Type)
-                {
-                    case 1:
-                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, 180));
-                        break;
-                    case 2:
-                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, 180));
-                        break;
-                    case 3:
-                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, _angle + 165));
-                        Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, _angle + 195));
-                        break;
-                    case 4:
-                        for (int i = 0; i < 5; i++)
-                        {
-                            Instantiate(Bullet_0, transform.position, Quaternion.Euler(0, 0, 160 + i * 10));
-                        }
-                        break;
-                }
-            }
-        }*/
-
+        if (enemyName == "Boss")
+            return;
         FireToPlayer();
         switch (paternType)
         {
@@ -129,8 +88,15 @@ public class EnemyCtrl : MonoBehaviour
 
         hp -= dmg;
 
-        spriteRenderer.sprite = sprites[1]; //피격 이펙트
-        Invoke("ReturnSprite", 0.1f); //0.1초 딜레이 후 원래대로
+        if (enemyName == "Boss")
+        {
+            anim.SetTrigger("OnHit");
+        }
+        else
+        {
+            spriteRenderer.sprite = sprites[1]; //피격 이펙트
+            Invoke("ReturnSprite", 0.05f); //딜레이 후 원래대로
+        }
 
         if(hp <= 0)
         {
@@ -139,23 +105,25 @@ public class EnemyCtrl : MonoBehaviour
             // 아이템 생성, 일정 확률로 아이템 생성
             if (itemPrefab != null && !itemSpawn)
             {
-                int itemRand = Random.Range(0, 5);
-                if (enemyName != "A")//itemRand == 0)
+                int itemRand = Random.Range(0, 3);
+                if (enemyName == "Boss")
+                    itemRand = 1;
+                if (enemyName != "A" && itemRand == 0)
                 {
                     int randItemType = Random.Range(0, 10);
                     if (randItemType < 3)
                     {
-                        GameObject itemObj = objectManager.MakeObj("itemPower"); //Instantiate(itemPrefab[0], transform.position, Quaternion.identity);
+                        GameObject itemObj = objectManager.MakeObj("itemPower");
                         itemObj.transform.position = transform.position;
                     }
                     else if (randItemType < 8)
                     {
-                        GameObject itemObj = objectManager.MakeObj("itemCoin"); //Instantiate(itemPrefab[1], transform.position, Quaternion.identity);
+                        GameObject itemObj = objectManager.MakeObj("itemCoin"); 
                         itemObj.transform.position = transform.position;
                     }
                     else
                     {
-                        GameObject itemObj = objectManager.MakeObj("itemBoom"); //Instantiate(itemPrefab[2], transform.position, Quaternion.identity);
+                        GameObject itemObj = objectManager.MakeObj("itemBoom"); 
                         itemObj.transform.position = transform.position;
                     }
                 }
@@ -201,21 +169,17 @@ public class EnemyCtrl : MonoBehaviour
             GameObject bulletObj;
             if (enemyName == "B")
             {
-                bulletObj = objectManager.MakeObj("enemyBullet0");//Instantiate(Bullet_0, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
-                bulletObj.transform.position = transform.position;
-                bulletObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                bulletObj = objectManager.MakeObj("enemyBullet0");
+                bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
             }
             else if (enemyName == "C")
             {
-                bulletObj = objectManager.MakeObj("enemyBullet1"); //Instantiate(Bullet_1, transform.position + Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
-                bulletObj.transform.position = transform.position + Vector3.right * 0.3f;
-                bulletObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 bulletObj = objectManager.MakeObj("enemyBullet1");
-                bulletObj.transform.position = transform.position - Vector3.right * 0.3f;
-                bulletObj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-                //Instantiate(Bullet_1, transform.position - Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
+                bulletObj.transform.SetPositionAndRotation(transform.position + Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
+                bulletObj = objectManager.MakeObj("enemyBullet1");
+                bulletObj.transform.SetPositionAndRotation(transform.position - Vector3.right * 0.3f, Quaternion.AngleAxis(angle, Vector3.forward));
             }
-            curShotDelay = 0;
+            curShotDelay = Random.Range(0f, 0.7f);
         }
     }
 

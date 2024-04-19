@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public Image[] lifeImages;
     public Image[] boomImages;
     public GameObject gameOverSet;
+    private bool isBossSpawn = false;
 
     public ObjectManager objectManager;
 
@@ -43,13 +44,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        enemyObj = new string[] { "enemyA", "enemyB", "enemyC" };
+        enemyObj = new string[] { "enemyA", "enemyB", "enemyC", "boss" };
     }
     // Start is called before the first frame update
     void Start()
     {
         UpdateBoomIcon(0);
-        hpSet = new int[] { 1, 5, 15 };
+        hpSet = new int[] { 1, 6, 17 };
     }
 
     // Update is called once per frame
@@ -67,24 +68,31 @@ public class GameManager : MonoBehaviour
                 playerLogic.score += 1;
                 curScoreDelay = 0;
             }
-
-        if (curSpawnelay >= maxSpawnDelay)
+        if (playerLogic.score < 3000)
         {
-            int paternType = Random.Range(0, 3); //랜덤한 패턴을 실행
-            switch (paternType)
+            if (curSpawnelay >= maxSpawnDelay)
             {
-                case 0:
-                    StartCoroutine(EnemyPatern0());
-                    break;
-                case 1:
-                    StartCoroutine(EnemyPatern1());
-                    break;
-                case 2:
-                    int randSpawn = Random.Range(0, 2) + 2;
-                    StartCoroutine(EnemyPatern2(randSpawn));
-                    break;
+                int paternType = Random.Range(0, 3); //랜덤한 패턴을 실행
+                switch (paternType)
+                {
+                    case 0:
+                        StartCoroutine(EnemyPatern0());
+                        break;
+                    case 1:
+                        StartCoroutine(EnemyPatern1());
+                        break;
+                    case 2:
+                        int randSpawn = Random.Range(0, 2) + 2;
+                        StartCoroutine(EnemyPatern2(randSpawn));
+                        break;
+                }
+                curSpawnelay = 0;
             }
-            curSpawnelay = 0;
+        }
+        else if (!isBossSpawn)
+        {
+            SpawnBoss();
+            isBossSpawn = true;
         }
     }
 
@@ -152,7 +160,6 @@ public class GameManager : MonoBehaviour
     void SpawnEnemy0(int enemyType) //1번째 패턴 적 생성
     {
         GameObject enemy = objectManager.MakeObj(enemyObj[enemyType]);
-        //Instantiate(enemyObjs[enemyType], spawnPoints[0].position, Quaternion.identity);
         enemy.transform.position = spawnPoints[0].position;
 
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //객체 생성 후 값 전달
@@ -160,7 +167,7 @@ public class GameManager : MonoBehaviour
         enemyLogic.MovePaternPoints0 = MovePaternPoints0;
         enemyLogic.paternType = 0;
         enemyLogic.objectManager = objectManager;
-        enemyLogic.hp = hpSet[enemyType];
+        enemyLogic.hp = hpSet[enemyType] * player.GetComponent<PlayerCtrl>().power * 2;
     }
     IEnumerator EnemyPatern1() //2번째 적 비행기 패턴
     {
@@ -177,7 +184,6 @@ public class GameManager : MonoBehaviour
     void SpawnEnemy1(int enemyType) //2번째 패턴 적 생성
     {
         GameObject enemy = objectManager.MakeObj(enemyObj[enemyType]);
-        //Instantiate(enemyObjs[enemyType], spawnPoints[1].position, Quaternion.identity);
         enemy.transform.position = spawnPoints[1].position;
 
         EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>(); //생성 후 값 전달
@@ -185,19 +191,28 @@ public class GameManager : MonoBehaviour
         enemyLogic.MovePaternPoints1 = MovePaternPoints1;
         enemyLogic.paternType = 1;
         enemyLogic.objectManager = objectManager;
-        enemyLogic.hp = hpSet[enemyType];
+        enemyLogic.hp = hpSet[enemyType] * player.GetComponent<PlayerCtrl>().power * 2;
     }
     IEnumerator EnemyPatern2(int spawnPoint) //3번째 패턴
     {
         GameObject enemy = objectManager.MakeObj(enemyObj[2]);
-        //Instantiate(enemyObjs[2], spawnPoints[spawnPoint].position, Quaternion.identity);
         enemy.transform.position = spawnPoints[spawnPoint].position;
 
         EnemyCtrl enemyLogic = enemy.GetComponent <EnemyCtrl>();
         enemyLogic.player = player;
         enemyLogic.paternType = 2;
         enemyLogic.objectManager = objectManager;
-        enemyLogic.hp = hpSet[2];
+        enemyLogic.hp = hpSet[2] * player.GetComponent<PlayerCtrl>().power * 2;
         yield return null;
+    }
+
+    void SpawnBoss()
+    {
+        GameObject enemy = objectManager.MakeObj(enemyObj[3]);
+        enemy.transform.position = spawnPoints[4].position;
+
+        EnemyCtrl enemyLogic = enemy.GetComponent<EnemyCtrl>();
+        enemyLogic.player = player;
+        enemyLogic.objectManager = objectManager;
     }
 }

@@ -14,17 +14,17 @@ public class PlayerCtrl : MonoBehaviour
     public bool isHit;
     public bool isBoomTime = false;
 
-    public GameObject Bullet_0;
-    public GameObject Bullet_1;
     public Transform firePos;
 
     private int BulletCnt = 0;
     private float iter = 0;
+    private float powerIter = 0;
     private Animator _animator;
 
     public GameManager gameManager;
     public GameObject destructionEffectPrefab; // 파괴 이펙트 프리팹
     public GameObject boomEffect;
+    public GameObject[] followers;
 
     public ObjectManager objectManager;
 
@@ -36,10 +36,6 @@ public class PlayerCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*Debug.Log("Log");
-        Debug.LogWarning("Warning");
-        Debug.LogError("Error");*/
-        //myTr = GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -70,68 +66,80 @@ public class PlayerCtrl : MonoBehaviour
 
     void Fire()
     {
-        if (Input.GetMouseButton(0))
+        iter += Time.deltaTime; //총알 딜레이
+        if (power > 3)
+            powerIter += Time.deltaTime;
+        if (iter > 0.1) //일정 시간마다 발사
         {
-            iter += Time.deltaTime; //총알 딜레이
-            if (iter > 0.1) //일정 시간마다 발사
+            GameObject bulletObj;
+            switch (power)
             {
-                power = power > 4 ? 4 : power;
-                GameObject bulletObj;
-                switch (power)
-                {
-                    case 1:
-                        bulletObj = objectManager.MakeObj("playerBullet0");//Instantiate(Bullet_0, firePos.position, Quaternion.identity);
-                        bulletObj.transform.position = firePos.position;
-                        break;
-                    case 2:
-                        for (int i = 0; i < 2; ++i) //집중탄
+                case 1:
+                    bulletObj = objectManager.MakeObj("playerBullet0");
+                    bulletObj.transform.position = firePos.position;
+                    break;
+                case 2:
+                    for (int i = 0; i < 2; ++i) //집중탄
+                    {
+                        bulletObj = objectManager.MakeObj("playerBullet0");
+                        bulletObj.transform.position = firePos.position + new Vector3(((1.0f - 2) / 2.0f + i) * 0.3f, 0f, 0f);
+                        //플레이어가 보는 방향으로 레벨에 비례한 총알 수 발사(간격 조절 가능), 생성위치 조절, y, z값은 변화 없음
+                    }
+                    break;
+                case 3:
+                    bulletObj = objectManager.MakeObj("playerBullet1");
+                    bulletObj.transform.position = firePos.position;
+                    bulletObj.transform.rotation = Quaternion.identity;
+                    for (int i = 0; i < 2; ++i) //집중탄
+                    {
+                        bulletObj = objectManager.MakeObj("playerBullet0");
+                        bulletObj.transform.position = firePos.position + new Vector3(((1.0f - 2) / 2.0f + i) * 0.65f, -0.1f, 0f);
+                        bulletObj.transform.rotation = Quaternion.identity;
+                        //플레이어가 보는 방향으로 레벨에 비례한 총알 수 발사(간격 조절 가능), 생성위치 조절
+                    }
+                    break;
+                case 4:
+                    if (BulletCnt++ == 0)
+                    {
+                        for (int i = 0; i < 6; ++i) //확산탄
+                        {
+                            bulletObj = objectManager.MakeObj("playerBullet1");
+                            bulletObj.transform.SetPositionAndRotation(firePos.position, Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 5.0f));
+                            //총알 생성시 각도 조절, 각도는 z방향 회전, Quaternion 오일러 값
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 6; ++i) //확산탄
                         {
                             bulletObj = objectManager.MakeObj("playerBullet0");
-                            bulletObj.transform.position = firePos.position + new Vector3(((1.0f - 2) / 2.0f + i) * 0.3f, 0f, 0f);
-
-                            //Instantiate(Bullet_0, firePos.position + new Vector3(((1.0f - 2) / 2.0f + i) * 0.3f, 0f, 0f), Quaternion.identity);
-                            //플레이어가 보는 방향으로 레벨에 비례한 총알 수 발사(간격 조절 가능), 생성위치 조절, y, z값은 변화 없음
+                            bulletObj.transform.SetPositionAndRotation(firePos.position, Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 5.0f));
+                            //총알 생성시 각도 조절, 각도는 z방향 회전, Quaternion 오일러 값
                         }
-                        break;
-                    case 3:
-                        bulletObj = objectManager.MakeObj("playerBullet1"); //Instantiate(Bullet_1, firePos.position, Quaternion.identity);
-                        bulletObj.transform.position = firePos.position;
-                        for (int i = 0; i < 2; ++i) //집중탄
-                        {
-                            bulletObj = objectManager.MakeObj("playerBullet0"); //Instantiate(Bullet_0, firePos.position + new Vector3(((1.0f - 2) / 2.0f + i) * 0.65f, -0.1f, 0f), Quaternion.identity);
-                            bulletObj.transform.position = firePos.position + new Vector3(((1.0f - 2) / 2.0f + i) * 0.65f, -0.1f, 0f);
-                            //플레이어가 보는 방향으로 레벨에 비례한 총알 수 발사(간격 조절 가능), 생성위치 조절
-                        }
-                        break;
-                    case 4:
-                        if (BulletCnt++ == 0)
-                        {
-                            for (int i = 0; i < 6; ++i) //확산탄
-                            {
-                                bulletObj = objectManager.MakeObj("playerBullet1"); //Instantiate(Bullet_1, firePos.position, Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 5.0f));
-                                bulletObj.transform.position = firePos.position;
-                                bulletObj.transform.rotation = Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 5.0f);
-                                //총알 생성시 각도 조절, 각도는 z방향 회전, Quaternion 오일러 값
-                            }
-                        }
-                        else
-                        {
-                            for (int i = 0; i < 6; ++i) //확산탄
-                            {
-                                bulletObj = objectManager.MakeObj("playerBullet0"); //Instantiate(Bullet_0, firePos.position, Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 5.0f));
-                                bulletObj.transform.position = firePos.position;
-                                bulletObj.transform.rotation = Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 5.0f);
-                                //총알 생성시 각도 조절, 각도는 z방향 회전, Quaternion 오일러 값
-                            }
-                        }
-                        BulletCnt = BulletCnt > 5 ? 0 : BulletCnt;
-                        break;
-                }
+                    }
+                    BulletCnt = BulletCnt > 5 ? 0 : BulletCnt;
+                    break;
             }
-            iter = iter > 0.1 ? 0 : iter; //발사 후 딜레이 초기화
+        }
+        if(powerIter > 2f)
+        {
+            AddFollower();
+            power = 3;
+            powerIter = 0;
+        }
+        iter = iter > 0.1 ? 0 : iter; //발사 후 딜레이 초기화
+    }
+    void AddFollower()
+    {
+        for (int i = 0; i < followers.Length; i++)
+        {
+            if (!followers[i].activeSelf)
+            {
+                followers[i].SetActive(true);
+                return;
+            }
         }
     }
-
     void Boom()
     {
         if(Input.GetMouseButton(1))
@@ -198,7 +206,7 @@ public class PlayerCtrl : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet") //적 총알에 맞았을 때 실행
+        if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet" || collision.tag == "Boss Bullet") //적 총알에 맞았을 때 실행
         {
             if (isHit)
                 return;
@@ -219,13 +227,15 @@ public class PlayerCtrl : MonoBehaviour
             {
                 GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
                 destructionEffect.transform.position = transform.position;
-                //Instantiate(destructionEffectPrefab, transform.position, Quaternion.identity);
             }
             gameManager.RespawnPlayer(); //2초 후 부활
         }
         else if(collision.tag == "PowerItem") //아이템을 먹었을 때
         {
             ++power;
+            power = power > 4 ? 4 : power;
+            if (power > 3)
+                powerIter = 0;
             score += 30;
         }
         else if(collision.tag == "BoomItem")

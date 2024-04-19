@@ -73,9 +73,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -925927925
-  m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingLayerID: -377551281
+  m_SortingLayer: 4
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1147401495359466748, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -180,14 +180,13 @@ MonoBehaviour:
   enemyName: B
   enemyScore: 50
   speed: 5
-  hp: 5
+  hp: 10
   paternType: 0
   sprites:
   - {fileID: -1147401495359466748, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   - {fileID: -7844560889915226194, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   MovePaternPoints0: []
   MovePaternPoints1: []
-  itemWayPoints: []
   Type: 0
   Bullet_0: {fileID: 6607683983104249933, guid: bac1d6a27d448df49b446acc0006cd72, type: 3}
   Bullet_1: {fileID: 6607683983104249933, guid: 3e6ec13e0adaf064ab6ad9335ca3ec2d, type: 3}
@@ -202,3 +201,4 @@ MonoBehaviour:
   iter: 0
   targetTr: {fileID: 0}
   b_Type: 0
+  objectManager: {fileID: 0}

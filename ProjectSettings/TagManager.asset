@@ -11,6 +11,7 @@ TagManager:
   - PowerItem
   - BoomItem
   - Coin
+  - Boss Bullet
   layers:
   - Default
   - TransparentFX
@@ -50,6 +51,18 @@ TagManager:
     locked: 0
   - name: BG
     uniqueID: 2612688891
+    locked: 0
+  - name: Effect
+    uniqueID: 2796353589
+    locked: 0
+  - name: Item
+    uniqueID: 3869268951
+    locked: 0
+  - name: Enemy
+    uniqueID: 3917416015
+    locked: 0
+  - name: Boss
+    uniqueID: 3046276603
     locked: 0
   - name: Char
     uniqueID: 3369039371
