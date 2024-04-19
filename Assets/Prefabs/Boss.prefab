@@ -129,18 +129,25 @@ MonoBehaviour:
   sprites: []
   MovePaternPoints0: []
   MovePaternPoints1: []
+  bossWayPoints: []
   Type: 0
   Bullet_0: {fileID: 0}
   Bullet_1: {fileID: 0}
   player: {fileID: 0}
   maxShotDelay: 0
   curShotDelay: 0
+  maxPaternDelay: 0
+  curPaternDelay: 0
   destructionEffectPrefab: {fileID: 0}
   itemPrefab: []
   iter: 0
   targetTr: {fileID: 0}
   b_Type: 0
+  bossPatern: 0
+  curBossPatern: 0
+  maxBossPatern: 040000000a0000002700000005000000
   objectManager: {fileID: 0}
+  gameManager: {fileID: 0}
 --- !u!70 &304438274539067266
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

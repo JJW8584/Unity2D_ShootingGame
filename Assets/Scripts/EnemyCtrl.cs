@@ -29,6 +29,8 @@ public class EnemyCtrl : MonoBehaviour
 
     public float maxShotDelay;
     public float curShotDelay;
+    public float maxPaternDelay = 2f;
+    public float curPaternDelay = 0;
 
     SpriteRenderer spriteRenderer;
     Animator anim;
@@ -42,7 +44,14 @@ public class EnemyCtrl : MonoBehaviour
     float _angle;
     private float atkPoint;
     private bool itemSpawn;
-    private int bossPatern;
+
+    public int bossPatern = 0;
+    public int curBossPatern = 0;
+    public int[] maxBossPatern;
+    private int bossBulletAng = 0;
+    private bool bossOpening = true;
+    private bool isPaternTime = true;
+    private float stopTime = 0;
 
     public ObjectManager objectManager;
     public GameManager gameManager;
@@ -64,9 +73,38 @@ public class EnemyCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(enemyName != "Boss")
+
+        if (enemyName == "Boss" && !isPaternTime)
+            curPaternDelay += Time.deltaTime;
+        if (curPaternDelay > maxPaternDelay)
+            isPaternTime = true;
+
+        if (enemyName != "Boss")
+        {
             FireToPlayer();
-        switch (paternType)
+        }
+        else if (!bossOpening && isPaternTime)
+        {
+            switch (bossPatern)
+            {
+                case 0:
+                    maxShotDelay = 1.5f;
+                    BossShot();
+                    break;
+                case 1:
+                    maxShotDelay = 0.5f;
+                    BossShotToPlayer();
+                    break;
+                case 2:
+                    maxShotDelay = 0.1f;
+                    BossArc();
+                    break;
+                case 3:
+                    break;
+            }
+        }
+
+        switch (paternType) //enemy들이 움직이는 코드
         {
             case 0:
                 StartCoroutine(BazierMove0()); //코루틴으로 실행
@@ -273,42 +311,96 @@ public class EnemyCtrl : MonoBehaviour
 
     IEnumerator BossPatern()
     {
-        if ((transform.position.y > 2.5f))
+        if ((transform.position.y > 2.5f) && bossOpening)
         {
             transform.Translate(Vector2.down * speed * Time.deltaTime);
+            if (transform.position.y <= 2.5f)
+                bossOpening = false;
         }
-        else
+        else if (stopTime > 1f)
         {
             float t = 0f;
             while (true)
             {
-                bossWayPoints[1].transform.position = new Vector3(4f, Random.Range(1f, 4f));
-                bossWayPoints[2].transform.position = new Vector3(-4f, Random.Range(1f, 4f));
+                //bossWayPoints[1].transform.position = new Vector3(4f, Random.Range(1f, 4f));
+                //bossWayPoints[2].transform.position = new Vector3(-4f, Random.Range(1f, 4f));
                 while (t < 1f)
                 {
                     transform.position = Mathf.Pow(1 - t, 3) * bossWayPoints[0].position  //베지어 곡선을 따라 이동
                             + 3 * t * Mathf.Pow(1 - t, 2) * bossWayPoints[1].position
                             + 3 * Mathf.Pow(t, 2) * (1 - t) * bossWayPoints[2].position
                             + Mathf.Pow(t, 3) * bossWayPoints[3].position;
-                    t += Time.deltaTime / 4f;
+                    t += Time.deltaTime / 5f;
                     yield return null;
                 }
                 t = 0f;
                 yield return null;
             }
-            /*            if (bossPatern == 1)
-                        {
-                            for (int i = 0; i < 50; ++i) //확산탄
-                            {
-                                GameObject bulletObj;
-                                bulletObj = objectManager.MakeObj("bossBullet0");
-                                bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, ((1.0f - 6) / 2.0f + i) * 3.0f));
-                                //총알 생성시 각도 조절, 각도는 z방향 회전, Quaternion 오일러 값
-                            }
-                            ++bossPatern;
-                        }
-            */
         }
+        else
+            stopTime += Time.deltaTime;
         yield return null;
+    }
+    
+    void BossShot()
+    {
+        curShotDelay += Time.deltaTime;
+        if (curShotDelay > maxShotDelay)
+        {
+            for (int i = 0; i < 4; ++i) //집중탄
+            {
+                GameObject bulletObj = objectManager.MakeObj("bossBullet0");
+                bulletObj.transform.position = transform.position + new Vector3(((1.0f - 4) / 2.0f + i) * 0.8f, -1.2f, 0f);
+            }
+            ++curBossPatern;
+            curShotDelay = 0f;
+        }
+        if (curBossPatern >= maxBossPatern[bossPatern])
+        {
+            isPaternTime = false;
+            curPaternDelay = 0;
+            curBossPatern = 0;
+            bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
+        }
+    }
+    void BossShotToPlayer()
+    {
+        curShotDelay += Time.deltaTime; //총알 딜레이
+        if (curShotDelay > maxShotDelay) //일정 시간마다 발사
+        {
+            Vector3 dir = player.transform.position - transform.position; //총알을 플레이어 방향으로 회전
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90;
+            GameObject bulletObj = objectManager.MakeObj("bossBullet0");
+            bulletObj.transform.SetPositionAndRotation(transform.position + new Vector3(0f, -1.2f), Quaternion.AngleAxis(angle, Vector3.forward));
+            ++curBossPatern;
+            curShotDelay = 0;
+        }
+        if (curBossPatern >= maxBossPatern[bossPatern])
+        {
+            isPaternTime = false;
+            curPaternDelay = 0;
+            curBossPatern = 0;
+            bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
+        }
+    }
+    void BossArc()
+    {
+        curShotDelay += Time.deltaTime; //총알 딜레이
+        if (curShotDelay > maxShotDelay) //일정 시간마다 발사
+        {
+            GameObject bulletObj = objectManager.MakeObj("bossBullet1");
+            bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, (bossBulletAng++ % 13) * 10f - 60f));
+            ++curBossPatern;
+            curShotDelay = 0;
+        }
+
+        if (curBossPatern >= maxBossPatern[bossPatern])
+        {
+            bossBulletAng = 0;
+            isPaternTime = false;
+            curPaternDelay = 0;
+            curBossPatern = 0;
+            bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
+        }
     }
 }
