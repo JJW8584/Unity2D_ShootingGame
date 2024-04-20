@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class BulletCtrl : MonoBehaviour
 {
-    [SerializeField] private int b_speed = 10;
-    public int dmg = 1;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private int b_speed;
+    public int dmg;
 
     // Update is called once per frame
     void Update()

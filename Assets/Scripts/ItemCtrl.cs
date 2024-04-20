@@ -24,7 +24,7 @@ public class ItemCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isWayPointSet)
+        if(!isWayPointSet) //이동경로 계산이 되지 않았을 때
         {
             CalBazierStart();
             isWayPointSet = true;
@@ -36,12 +36,11 @@ public class ItemCtrl : MonoBehaviour
                     + 3 * Mathf.Pow(t, 2) * (1 - t) * cloneWayPoints[2].position
                     + Mathf.Pow(t, 3) * cloneWayPoints[3].position;
         }
-        else
+        else //이동이 끝났을 때 = 플레이어가 아이템을 먹지 않았을 때
         {
             t = 0;
             gameObject.SetActive(false);
         }
-
         t += Time.deltaTime / 6f;
     }
 
@@ -49,7 +48,7 @@ public class ItemCtrl : MonoBehaviour
     {
         isWayPointSet = false;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision) //플레이어가 먹으면 비활성화
     {
         if (collision.tag == "Player")
         {
@@ -62,7 +61,7 @@ public class ItemCtrl : MonoBehaviour
     {
         for (int i = 0; i < wayPoints.Length; i++)
         {
-            if (cloneWayPoints[i] == null)
+            if (cloneWayPoints[i] == null) //이동경로 할당이 되어있지 않은 경우
             {
                 cloneWayPoints[i] = new GameObject("Waypoint_" + i).transform;
             }

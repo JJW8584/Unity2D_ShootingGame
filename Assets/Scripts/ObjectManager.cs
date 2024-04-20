@@ -4,7 +4,8 @@ using TMPro;
 using UnityEngine;
 
 public class ObjectManager : MonoBehaviour
-{
+{ 
+    //오브젝트 풀링
     public GameObject enemyAPrefab;
     public GameObject enemyBPrefab;
     public GameObject enemyCPrefab;

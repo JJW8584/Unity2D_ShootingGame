@@ -20,7 +20,6 @@ public class EnemyCtrl : MonoBehaviour
     public Transform[] bossWayPoints;
 
     [SerializeField] private int Type; //플레이어 방향으로 이동
-    private Transform target;
 
     public GameObject Bullet_0;
     public GameObject Bullet_1;
@@ -50,8 +49,8 @@ public class EnemyCtrl : MonoBehaviour
     public int[] maxBossPatern;
     private int bossBulletAng = 0;
     private bool bossOpening = true;
-    private bool isPaternTime = true;
     private float stopTime = 0;
+    private bool isPaternTime = true;
 
     public ObjectManager objectManager;
     public GameManager gameManager;
@@ -67,11 +66,6 @@ public class EnemyCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isPaternTime && enemyName == "Boss") //패턴 간 딜레이를 주고 싶음...how?
-            curPaternDelay += Time.deltaTime;
-        if (curPaternDelay > maxPaternDelay)
-            isPaternTime = true;
-
         if (enemyName != "Boss" && !gameManager.isBossSpawn)
         {
             FireToPlayer();
@@ -98,6 +92,8 @@ public class EnemyCtrl : MonoBehaviour
                     break;
             }
         }
+        if (!isPaternTime)
+            Invoke("PaternTimeStart", 2f);
 
         switch (paternType) //enemy들이 움직이는 코드
         {
@@ -334,12 +330,13 @@ public class EnemyCtrl : MonoBehaviour
         yield return null;
     }
     
-    void BossShot()
+    //보스 패턴
+    void BossShot() //4발 발사
     {
         curShotDelay += Time.deltaTime;
         if (curShotDelay > maxShotDelay)
         {
-            for (int i = 0; i < 4; ++i) //집중탄
+            for (int i = 0; i < 4; ++i)
             {
                 GameObject bulletObj = objectManager.MakeObj("bossBullet0");
                 bulletObj.transform.position = transform.position + new Vector3(((1.0f - 4) / 2.0f + i) * 0.8f, -1.2f, 0f);
@@ -348,15 +345,14 @@ public class EnemyCtrl : MonoBehaviour
             ++curBossPatern;
             curShotDelay = 0f;
         }
-        if (curBossPatern >= maxBossPatern[bossPatern])
+        if (curBossPatern >= maxBossPatern[bossPatern]) //패턴이 끝났을 때 초기화
         {
             isPaternTime = false;
-            curPaternDelay = 0;
             curBossPatern = 0;
             bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
         }
     }
-    void BossShotToPlayer()
+    void BossShotToPlayer() //플레이어에게 발사
     {
         curShotDelay += Time.deltaTime; //총알 딜레이
         if (curShotDelay > maxShotDelay) //일정 시간마다 발사
@@ -368,15 +364,14 @@ public class EnemyCtrl : MonoBehaviour
             ++curBossPatern;
             curShotDelay = 0;
         }
-        if (curBossPatern >= maxBossPatern[bossPatern])
+        if (curBossPatern >= maxBossPatern[bossPatern]) //패턴이 끝났을 때 초기화
         {
             isPaternTime = false;
-            curPaternDelay = 0;
             curBossPatern = 0;
             bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
         }
     }
-    void BossShotArc()
+    void BossShotArc() //부채꼴로 발사
     {
         curShotDelay += Time.deltaTime; //총알 딜레이
         if (curShotDelay > maxShotDelay) //일정 시간마다 발사
@@ -387,21 +382,20 @@ public class EnemyCtrl : MonoBehaviour
             curShotDelay = 0;
         }
 
-        if (curBossPatern >= maxBossPatern[bossPatern])
+        if (curBossPatern >= maxBossPatern[bossPatern]) //패턴이 끝났을 때 초기화
         {
-            bossBulletAng = 0;
             isPaternTime = false;
-            curPaternDelay = 0;
+            bossBulletAng = 0;
             curBossPatern = 0;
             bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
         }
     }
-    void BossShotCir()
+    void BossShotCir() //원형으로 발사
     {
         curShotDelay += Time.deltaTime; //총알 딜레이
         if (curShotDelay > maxShotDelay) //일정 시간마다 발사
         {
-            for (int i = 0; i < 36; i++)
+            for (int i = 0; i < 36; i++) //360도 총알 발사
             {
                 GameObject bulletObj = objectManager.MakeObj("bossBullet1");
                 bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, i * 10f));
@@ -410,12 +404,15 @@ public class EnemyCtrl : MonoBehaviour
             curShotDelay = 0;
         }
 
-        if (curBossPatern >= maxBossPatern[bossPatern])
+        if (curBossPatern >= maxBossPatern[bossPatern]) //패턴이 끝났을 때 초기화
         {
             isPaternTime = false;
-            curPaternDelay = 0;
             curBossPatern = 0;
             bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
         }
+    }
+    void PaternTimeStart()
+    {
+        isPaternTime = true;
     }
 }

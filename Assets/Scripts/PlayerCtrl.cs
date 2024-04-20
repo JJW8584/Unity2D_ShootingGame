@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    public int speed = 10;
     public int power = 1; //3레벨이 최대
     public int boom = 0; //3개가 최대
     public int life = 3;
@@ -15,6 +14,7 @@ public class PlayerCtrl : MonoBehaviour
     public bool Invincible = false;
 
     public Transform firePos;
+    public GameObject HP;
 
     private int BulletCnt = 0;
     private float iter = 0;
@@ -41,27 +41,7 @@ public class PlayerCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerMove();
         Fire();
-        Boom();
-    }
-
-    void PlayerMove()
-    {
-        float h = Input.GetAxis("Horizontal"); //x값
-        float v = Input.GetAxis("Vertical"); //y값
-
-        _animator.SetFloat("p_Hori", h); //플레이어의 p_Hori값을 set, 애니메이션을 위함
-
-        Vector3 moveDir = Vector3.up * v + Vector3.right * h; //방향벡터 객체 선언
-
-        transform.Translate(moveDir * speed * Time.deltaTime); //플레이어의 이동
-
-        Vector3 viewPos = Camera.main.WorldToViewportPoint(transform.position); //캐릭터의 월드 좌표를 뷰포트 좌표계로 변환
-        viewPos.x = Mathf.Clamp01(viewPos.x); //x값을 0이상, 1이하로 제한
-        viewPos.y = Mathf.Clamp01(viewPos.y); //y값을 0이상, 1이하로 제한
-        Vector3 worldPos = Camera.main.ViewportToWorldPoint(viewPos); //다시 월드 좌표로 변환
-        transform.position = worldPos; //좌표를 적용
     }
 
     void Fire()
@@ -98,7 +78,7 @@ public class PlayerCtrl : MonoBehaviour
                         //플레이어가 보는 방향으로 레벨에 비례한 총알 수 발사(간격 조절 가능), 생성위치 조절
                     }
                     break;
-                case 4:
+                case 4: //일정 시간 확산탄 발사 후 종료
                     if (BulletCnt++ == 0)
                     {
                         for (int i = 0; i < 6; ++i) //확산탄
@@ -121,7 +101,7 @@ public class PlayerCtrl : MonoBehaviour
                     break;
             }
         }
-        if(powerIter > 2f)
+        if(powerIter > 2f) //확산탄 발사 종료 후 follower생성
         {
             AddFollower();
             power = 3;
@@ -140,90 +120,87 @@ public class PlayerCtrl : MonoBehaviour
             }
         }
     }
-    void Boom()
+    public void Boom()
     {
-        if(Input.GetMouseButton(1))
+        if (boom > 0)
         {
-            if (boom > 0)
+            if (!isBoomTime)
             {
-                if (!isBoomTime)
+                --boom;
+                gameManager.UpdateBoomIcon(boom);
+                isBoomTime = true;
+                boomEffect.SetActive(true); //파괴 이펙트 실행
+                Invoke("BoomEffectOff", 2f);
+
+                //적 개체 파괴
+                GameObject[] enemyA = objectManager.GetPool("enemyA");
+                GameObject[] enemyB = objectManager.GetPool("enemyB");
+                GameObject[] enemyC = objectManager.GetPool("enemyC");
+                GameObject[] boss = objectManager.GetPool("boss");
+                for (int i = 0; i < enemyA.Length; i++)
                 {
-                    --boom;
-                    gameManager.UpdateBoomIcon(boom);
-                    isBoomTime = true;
-                    boomEffect.SetActive(true); //파괴 이펙트 실행
-                    Invoke("BoomEffectOff", 2f);
+                    if (enemyA[i].activeSelf)
+                    {
+                        EnemyCtrl enemyLogic = enemyA[i].GetComponent<EnemyCtrl>();
+                        enemyLogic.OnHit(100);
+                    }
+                }
+                for (int i = 0; i < enemyB.Length; i++)
+                {
+                    if (enemyB[i].activeSelf)
+                    {
+                        EnemyCtrl enemyLogic = enemyB[i].GetComponent<EnemyCtrl>();
+                        enemyLogic.OnHit(100);
+                    }
+                }
+                for (int i = 0; i < enemyC.Length; i++)
+                {
+                    if (enemyC[i].activeSelf)
+                    {
+                        EnemyCtrl enemyLogic = enemyC[i].GetComponent<EnemyCtrl>();
+                        enemyLogic.OnHit(100);
+                    }
+                }
+                for (int i = 0; i < boss.Length; i++)
+                {
+                    if (boss[i].activeSelf)
+                    {
+                        EnemyCtrl enemyLogic = boss[i].GetComponent<EnemyCtrl>();
+                        enemyLogic.OnHit(500);
+                    }
+                }
 
-                    //적 개체 파괴
-                    GameObject[] enemyA = objectManager.GetPool("enemyA");
-                    GameObject[] enemyB = objectManager.GetPool("enemyB");
-                    GameObject[] enemyC = objectManager.GetPool("enemyC");
-                    GameObject[] boss = objectManager.GetPool("boss");
-                    for (int i = 0; i < enemyA.Length; i++) 
+                //적 총알
+                GameObject[] enemyBullets0 = objectManager.GetPool("enemyBullet0");
+                GameObject[] enemyBullets1 = objectManager.GetPool("enemyBullet1");
+                GameObject[] bossBullets0 = objectManager.GetPool("bossBullet0");
+                GameObject[] bossBullets1 = objectManager.GetPool("bossBullet1");
+                for (int i = 0; i < enemyBullets0.Length; i++)
+                {
+                    if (enemyBullets0[i].activeSelf)
                     {
-                        if (enemyA[i].activeSelf)
-                        {
-                            EnemyCtrl enemyLogic = enemyA[i].GetComponent<EnemyCtrl>();
-                            enemyLogic.OnHit(100);
-                        }
+                        enemyBullets0[i].SetActive(false);
                     }
-                    for (int i = 0; i < enemyB.Length; i++) 
+                }
+                for (int i = 0; i < enemyBullets1.Length; i++)
+                {
+                    if (enemyBullets1[i].activeSelf)
                     {
-                        if (enemyB[i].activeSelf)
-                        {
-                            EnemyCtrl enemyLogic = enemyB[i].GetComponent<EnemyCtrl>();
-                            enemyLogic.OnHit(100);
-                        }
+                        enemyBullets0[i].SetActive(false);
                     }
-                    for (int i = 0; i < enemyC.Length; i++) 
+                }
+                for (int i = 0; i < bossBullets0.Length; i++)
+                {
+                    if (bossBullets0[i].activeSelf)
                     {
-                        if (enemyC[i].activeSelf)
-                        {
-                            EnemyCtrl enemyLogic = enemyC[i].GetComponent<EnemyCtrl>();
-                            enemyLogic.OnHit(100);
-                        }
+                        bossBullets0[i].SetActive(false);
                     }
-                    for (int i = 0; i < boss.Length; i++) 
+                }
+                for (int i = 0; i < bossBullets1.Length; i++)
+                {
+                    if (bossBullets1[i].activeSelf)
                     {
-                        if (boss[i].activeSelf)
-                        {
-                            EnemyCtrl enemyLogic = boss[i].GetComponent<EnemyCtrl>();
-                            enemyLogic.OnHit(500);
-                        }
-                    }
-
-                    //적 총알
-                    GameObject[] enemyBullets0 = objectManager.GetPool("enemyBullet0");
-                    GameObject[] enemyBullets1 = objectManager.GetPool("enemyBullet1");
-                    GameObject[] bossBullets0 = objectManager.GetPool("bossBullet0");
-                    GameObject[] bossBullets1 = objectManager.GetPool("bossBullet1");
-                    for (int i = 0; i < enemyBullets0.Length; i++)
-                    {
-                        if (enemyBullets0[i].activeSelf)
-                        {
-                            enemyBullets0[i].SetActive(false);
-                        }
-                    }
-                    for (int i = 0; i < enemyBullets1.Length; i++)
-                    {
-                        if (enemyBullets1[i].activeSelf)
-                        {
-                            enemyBullets0[i].SetActive(false);
-                        }
-                    }
-                    for (int i = 0; i < bossBullets0.Length; i++)
-                    {
-                        if (bossBullets0[i].activeSelf)
-                        {
-                            bossBullets0[i].SetActive(false);
-                        }
-                    }
-                    for (int i = 0; i < bossBullets1.Length; i++)
-                    {
-                        if (bossBullets1[i].activeSelf)
-                        {
-                            bossBullets1[i].SetActive(false);
-                        }
+                        bossBullets1[i].SetActive(false);
                     }
                 }
             }
@@ -233,28 +210,47 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(!Invincible && (collision.tag == "Enemy" || collision.tag == "Enemy Bullet" || collision.tag == "Boss Bullet")) //적 총알에 맞았을 때 실행
         {
-            if (isHit)
-                return;
+            if(HP.transform.localScale.x > 0) //체력바가 남아있을 때
+            {
+                HP.transform.localScale = new Vector3(HP.transform.localScale.x - 0.1f, 1, 0);
+                if(HP.transform.localScale.x > 0.7f) //남은 체력에 따라 색깔 변화
+                {
+                    HP.GetComponent<SpriteRenderer>().color = Color.green;
+                }
+                else if(HP.transform.localScale.x > 0.3f)
+                {
+                    HP.GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+                else
+                {
+                    HP.GetComponent<SpriteRenderer>().color = Color.red;
+                }
+            }
+            if (HP.transform.localScale.x <= 0) //체력이 0일 때 파괴
+            {
+                if (isHit)
+                    return;
 
-            isHit = true;
+                isHit = true;
 
-            life--;
-            if(life <= 0)
-            {
-                gameManager.GameOver();
+                life--;
+                if (life <= 0)
+                {
+                    gameManager.GameOver();
+                }
+                else
+                {
+                    gameManager.UpdateLifeIcon(life);
+                }
+                gameObject.SetActive(false); //비활성화
+                if (destructionEffectPrefab != null) // 파괴 이펙트 생성
+                {
+                    GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
+                    destructionEffect.transform.position = transform.position;
+                }
+                Invincible = true;
+                gameManager.RespawnPlayer(); //2초 후 부활
             }
-            else
-            {
-                gameManager.UpdateLifeIcon(life);
-            }
-            gameObject.SetActive(false); //비활성화
-            if (destructionEffectPrefab != null) // 파괴 이펙트 생성
-            {
-                GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
-                destructionEffect.transform.position = transform.position;
-            }
-            Invincible = true;
-            gameManager.RespawnPlayer(); //2초 후 부활
         }
         else if(collision.tag == "PowerItem") //아이템을 먹었을 때
         {
