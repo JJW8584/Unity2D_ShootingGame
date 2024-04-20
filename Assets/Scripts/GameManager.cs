@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
-using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 
 public class GameManager : MonoBehaviour
 {
@@ -208,7 +205,7 @@ public class GameManager : MonoBehaviour
             if (boss[i].activeSelf)
             {
                 EnemyCtrl enemyLogic = boss[i].GetComponent<EnemyCtrl>();
-                enemyLogic.OnHit(500);
+                enemyLogic.OnHit(4000);
             }
         }
 

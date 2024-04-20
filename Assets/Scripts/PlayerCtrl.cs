@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
@@ -41,7 +37,18 @@ public class PlayerCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        PlayerPos();
         Fire();
+    }
+
+    void PlayerPos()
+    {
+        Vector3 worldpos = Camera.main.WorldToViewportPoint(this.transform.position);
+        if (worldpos.x < 0f) worldpos.x = 0f;
+        if (worldpos.y < 0f) worldpos.y = 0f;
+        if (worldpos.x > 1f) worldpos.x = 1f;
+        if (worldpos.y > 1f) worldpos.y = 1f;
+        this.transform.position = Camera.main.ViewportToWorldPoint(worldpos);
     }
 
     void Fire()
@@ -212,7 +219,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             if(HP.transform.localScale.x > 0) //체력바가 남아있을 때
             {
-                HP.transform.localScale = new Vector3(HP.transform.localScale.x - 0.1f, 1, 0);
+                HP.transform.localScale = new Vector3(HP.transform.localScale.x - 0.21f, 1, 0);
                 if(HP.transform.localScale.x > 0.7f) //남은 체력에 따라 색깔 변화
                 {
                     HP.GetComponent<SpriteRenderer>().color = Color.green;

@@ -126,7 +126,9 @@ MonoBehaviour:
   speed: 1.5
   hp: 3000
   paternType: 3
-  sprites: []
+  sprites:
+  - {fileID: 2192450021786810173, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  - {fileID: -7945901444079236628, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   MovePaternPoints0: []
   MovePaternPoints1: []
   bossWayPoints: []

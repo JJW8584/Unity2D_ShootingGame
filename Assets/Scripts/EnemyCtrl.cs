@@ -1,11 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
-using static UnityEngine.GraphicsBuffer;
 
 public class EnemyCtrl : MonoBehaviour
 {
@@ -24,8 +19,6 @@ public class EnemyCtrl : MonoBehaviour
     public GameObject Bullet_0;
     public GameObject Bullet_1;
     public GameObject player;
-
-    Quaternion _rot;
 
     public float maxShotDelay;
     public float curShotDelay;
