@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     public Image[] lifeImages;
     public Image[] boomImages;
     public GameObject gameOverSet;
-    private bool isBossSpawn = false;
+    public bool isBossSpawn = false;
 
     public ObjectManager objectManager;
 
@@ -92,8 +92,26 @@ public class GameManager : MonoBehaviour
         }
         else if (!isBossSpawn)
         {
+            maxSpawnDelay = 7f;
             StartCoroutine(SpawnBoss());
             isBossSpawn = true;
+        }
+        if (isBossSpawn)
+        {
+            if (curSpawnelay >= maxSpawnDelay)
+            {
+                int paternType = Random.Range(0, 2); //랜덤한 패턴을 실행
+                switch (paternType)
+                {
+                    case 0:
+                        StartCoroutine(EnemyPatern0());
+                        break;
+                    case 1:
+                        StartCoroutine(EnemyPatern1());
+                        break;
+                }
+                curSpawnelay = 0;
+            }
         }
     }
 

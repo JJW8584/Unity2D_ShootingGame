@@ -689,6 +689,7 @@ MonoBehaviour:
   - {fileID: 1463094586}
   - {fileID: 850321642}
   gameOverSet: {fileID: 685871957}
+  isBossSpawn: 0
   objectManager: {fileID: 1493294667}
 --- !u!4 &377291896
 Transform:
@@ -3604,7 +3605,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
 --- !u!1 &1659149855
 GameObject:

@@ -124,7 +124,7 @@ MonoBehaviour:
   enemyName: Boss
   enemyScore: 5000
   speed: 1.5
-  hp: 2000
+  hp: 3000
   paternType: 3
   sprites: []
   MovePaternPoints0: []
@@ -145,7 +145,7 @@ MonoBehaviour:
   b_Type: 0
   bossPatern: 0
   curBossPatern: 0
-  maxBossPatern: 040000000a0000002700000005000000
+  maxBossPatern: 050000000a0000002700000004000000
   objectManager: {fileID: 0}
   gameManager: {fileID: 0}
 --- !u!70 &304438274539067266

@@ -170,11 +170,11 @@ public class ObjectManager : MonoBehaviour
             case "enemyB":
                 targetPool = enemyB;
                 break;
-            case "boss":
-                targetPool = boss;
-                break;
             case "enemyC":
                 targetPool = enemyC;
+                break;
+            case "boss":
+                targetPool = boss;
                 break;
             case "itemBoom":
                 targetPool = itemBoom;
@@ -233,11 +233,11 @@ public class ObjectManager : MonoBehaviour
             case "enemyB":
                 targetPool = enemyB;
                 break;
-            case "boss":
-                targetPool = boss;
-                break;
             case "enemyC":
                 targetPool = enemyC;
+                break;
+            case "boss":
+                targetPool = boss;
                 break;
             case "itemBoom":
                 targetPool = itemBoom;

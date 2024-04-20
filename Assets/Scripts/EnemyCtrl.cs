@@ -29,8 +29,8 @@ public class EnemyCtrl : MonoBehaviour
 
     public float maxShotDelay;
     public float curShotDelay;
-    public float maxPaternDelay = 2f;
-    public float curPaternDelay = 0;
+    public float maxPaternDelay = 5f;
+    public float curPaternDelay = 0f;
 
     SpriteRenderer spriteRenderer;
     Animator anim;
@@ -41,7 +41,6 @@ public class EnemyCtrl : MonoBehaviour
     public int iter = 0;
     public Transform targetTr;
     [SerializeField] private int b_Type;
-    float _angle;
     private float atkPoint;
     private bool itemSpawn;
 
@@ -63,23 +62,16 @@ public class EnemyCtrl : MonoBehaviour
         if(enemyName == "Boss")
             anim = GetComponent<Animator>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        /*atkPoint = Random.Range(2.0f, 4.0f);
-        Type = Random.Range(0, 4) + 1;*/
-    }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (enemyName == "Boss" && !isPaternTime)
+        if(!isPaternTime && enemyName == "Boss") //패턴 간 딜레이를 주고 싶음...how?
             curPaternDelay += Time.deltaTime;
         if (curPaternDelay > maxPaternDelay)
             isPaternTime = true;
 
-        if (enemyName != "Boss")
+        if (enemyName != "Boss" && !gameManager.isBossSpawn)
         {
             FireToPlayer();
         }
@@ -97,9 +89,11 @@ public class EnemyCtrl : MonoBehaviour
                     break;
                 case 2:
                     maxShotDelay = 0.1f;
-                    BossArc();
+                    BossShotArc();
                     break;
                 case 3:
+                    maxShotDelay = 1.5f;
+                    BossShotCir();
                     break;
             }
         }
@@ -151,10 +145,10 @@ public class EnemyCtrl : MonoBehaviour
             {
                 int itemRand = Random.Range(0, 20);
                 if (enemyName == "Boss")
-                    itemRand = 1;
+                    itemRand = 10;
                 if (enemyName != "A" && itemRand < 10)
                 {
-                    if (itemRand < 3)
+                    if (itemRand < 4)
                     {
                         GameObject itemObj = objectManager.MakeObj("itemPower");
                         itemObj.transform.position = transform.position;
@@ -178,16 +172,6 @@ public class EnemyCtrl : MonoBehaviour
             destructionEffect.transform.position = transform.position;
         }
     }
-
-    void MoveToPlayer() //플레이어에게 이동
-    {
-        target = GameObject.FindWithTag("Player").GetComponent<Transform>(); //tag로 플레이어를 찾아 이동
-        Vector2 atkDir = target.position - transform.position;
-        transform.Translate(atkDir.normalized * speed * Time.deltaTime);
-        _angle = Mathf.Atan2(atkDir.y, atkDir.x) * Mathf.Rad2Deg + 90; //플레이어를 향해서 회전
-        _rot = Quaternion.Euler(0, 0, _angle);
-    }
-
     void ReturnSprite()
     {
         spriteRenderer.sprite = sprites[0]; //원래대로 돌아옴
@@ -351,6 +335,7 @@ public class EnemyCtrl : MonoBehaviour
             {
                 GameObject bulletObj = objectManager.MakeObj("bossBullet0");
                 bulletObj.transform.position = transform.position + new Vector3(((1.0f - 4) / 2.0f + i) * 0.8f, -1.2f, 0f);
+                bulletObj.transform.rotation = Quaternion.identity;
             }
             ++curBossPatern;
             curShotDelay = 0f;
@@ -383,13 +368,13 @@ public class EnemyCtrl : MonoBehaviour
             bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
         }
     }
-    void BossArc()
+    void BossShotArc()
     {
         curShotDelay += Time.deltaTime; //총알 딜레이
         if (curShotDelay > maxShotDelay) //일정 시간마다 발사
         {
             GameObject bulletObj = objectManager.MakeObj("bossBullet1");
-            bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, (bossBulletAng++ % 13) * 10f - 60f));
+            bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, (bossBulletAng++ % 10) * 10f - 45f));
             ++curBossPatern;
             curShotDelay = 0;
         }
@@ -397,6 +382,28 @@ public class EnemyCtrl : MonoBehaviour
         if (curBossPatern >= maxBossPatern[bossPatern])
         {
             bossBulletAng = 0;
+            isPaternTime = false;
+            curPaternDelay = 0;
+            curBossPatern = 0;
+            bossPatern = bossPatern == 3 ? 0 : ++bossPatern;
+        }
+    }
+    void BossShotCir()
+    {
+        curShotDelay += Time.deltaTime; //총알 딜레이
+        if (curShotDelay > maxShotDelay) //일정 시간마다 발사
+        {
+            for (int i = 0; i < 36; i++)
+            {
+                GameObject bulletObj = objectManager.MakeObj("bossBullet1");
+                bulletObj.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0f, 0f, i * 10f));
+            }
+            ++curBossPatern;
+            curShotDelay = 0;
+        }
+
+        if (curBossPatern >= maxBossPatern[bossPatern])
+        {
             isPaternTime = false;
             curPaternDelay = 0;
             curBossPatern = 0;

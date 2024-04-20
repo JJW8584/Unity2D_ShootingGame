@@ -157,6 +157,7 @@ public class PlayerCtrl : MonoBehaviour
                     GameObject[] enemyA = objectManager.GetPool("enemyA");
                     GameObject[] enemyB = objectManager.GetPool("enemyB");
                     GameObject[] enemyC = objectManager.GetPool("enemyC");
+                    GameObject[] boss = objectManager.GetPool("boss");
                     for (int i = 0; i < enemyA.Length; i++) 
                     {
                         if (enemyA[i].activeSelf)
@@ -181,10 +182,20 @@ public class PlayerCtrl : MonoBehaviour
                             enemyLogic.OnHit(100);
                         }
                     }
+                    for (int i = 0; i < boss.Length; i++) 
+                    {
+                        if (boss[i].activeSelf)
+                        {
+                            EnemyCtrl enemyLogic = boss[i].GetComponent<EnemyCtrl>();
+                            enemyLogic.OnHit(500);
+                        }
+                    }
 
                     //Àû ÃÑ¾Ë
                     GameObject[] enemyBullets0 = objectManager.GetPool("enemyBullet0");
                     GameObject[] enemyBullets1 = objectManager.GetPool("enemyBullet1");
+                    GameObject[] bossBullets0 = objectManager.GetPool("bossBullet0");
+                    GameObject[] bossBullets1 = objectManager.GetPool("bossBullet1");
                     for (int i = 0; i < enemyBullets0.Length; i++)
                     {
                         if (enemyBullets0[i].activeSelf)
@@ -197,6 +208,20 @@ public class PlayerCtrl : MonoBehaviour
                         if (enemyBullets1[i].activeSelf)
                         {
                             enemyBullets0[i].SetActive(false);
+                        }
+                    }
+                    for (int i = 0; i < bossBullets0.Length; i++)
+                    {
+                        if (bossBullets0[i].activeSelf)
+                        {
+                            bossBullets0[i].SetActive(false);
+                        }
+                    }
+                    for (int i = 0; i < bossBullets1.Length; i++)
+                    {
+                        if (bossBullets1[i].activeSelf)
+                        {
+                            bossBullets1[i].SetActive(false);
                         }
                     }
                 }
