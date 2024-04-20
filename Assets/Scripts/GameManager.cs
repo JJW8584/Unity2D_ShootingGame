@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
                 score += 1;
                 curScoreDelay = 0;
             }
-        if (score < 5000)
+        if (score < 4000)
         {
             if (curSpawnelay >= maxSpawnDelay)
             {
@@ -126,6 +126,12 @@ public class GameManager : MonoBehaviour
 
         PlayerCtrl playerLogic = player.GetComponent<PlayerCtrl>();
         playerLogic.isHit = false;
+
+        Invoke("PlayerInvincible", 2f);
+    }
+    void PlayerInvincible()
+    {
+        player.GetComponent<PlayerCtrl>().Invincible = false;
     }
     public void UpdateLifeIcon(int life)
     {
@@ -162,7 +168,7 @@ public class GameManager : MonoBehaviour
 
     public void GameRetry()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
     IEnumerator EnemyPatern0() //1번째 적 비행기 패턴
     {

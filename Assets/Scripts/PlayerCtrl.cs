@@ -12,6 +12,7 @@ public class PlayerCtrl : MonoBehaviour
     public int life = 3;
     public bool isHit;
     public bool isBoomTime = false;
+    public bool Invincible = false;
 
     public Transform firePos;
 
@@ -230,7 +231,7 @@ public class PlayerCtrl : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Enemy" || collision.tag == "Enemy Bullet" || collision.tag == "Boss Bullet") //적 총알에 맞았을 때 실행
+        if(!Invincible && (collision.tag == "Enemy" || collision.tag == "Enemy Bullet" || collision.tag == "Boss Bullet")) //적 총알에 맞았을 때 실행
         {
             if (isHit)
                 return;
@@ -252,6 +253,7 @@ public class PlayerCtrl : MonoBehaviour
                 GameObject destructionEffect = objectManager.MakeObj("destroyEffect");
                 destructionEffect.transform.position = transform.position;
             }
+            Invincible = true;
             gameManager.RespawnPlayer(); //2초 후 부활
         }
         else if(collision.tag == "PowerItem") //아이템을 먹었을 때

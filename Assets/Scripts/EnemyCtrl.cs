@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static UnityEditor.Progress;
 using static UnityEngine.GraphicsBuffer;
 
@@ -140,6 +141,13 @@ public class EnemyCtrl : MonoBehaviour
         if(hp <= 0)
         {
              gameManager.score += enemyScore;
+            if (enemyName == "Boss")
+            {
+                PlayerPrefs.SetInt("score", gameManager.score);
+                PlayerPrefs.SetFloat("playerX", player.transform.position.x);
+                PlayerPrefs.SetFloat("playerY", player.transform.position.y);
+                SceneManager.LoadScene(2);
+            }
             // 아이템 생성, 일정 확률로 아이템 생성
             if (itemPrefab != null && !itemSpawn)
             {
