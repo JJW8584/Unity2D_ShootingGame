@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
 
         Invoke("PlayerInvincible", 2f);
     }
-    void PlayerInvincible()
+    void PlayerInvincible() //플레이어 무적시간
     {
         player.GetComponent<PlayerCtrl>().Invincible = false;
     }
@@ -317,7 +317,7 @@ public class GameManager : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator SpawnBoss()
+    IEnumerator SpawnBoss() //보스 생성
     {
         GameObject enemy = objectManager.MakeObj(enemyObj[3]);
         enemy.transform.position = spawnPoints[4].position;

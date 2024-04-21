@@ -59,13 +59,13 @@ public class EnemyCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemyName != "Boss" && !gameManager.isBossSpawn)
+        if (enemyName != "Boss" && !gameManager.isBossSpawn) //보스 스테이지가 아닐경우 일반 적기 공격
         {
             FireToPlayer();
         }
-        else if (!bossOpening && isPaternTime)
+        else if (!bossOpening && isPaternTime) //보스 등장이 끝난 경우
         {
-            switch (bossPatern)
+            switch (bossPatern) //보스 패턴 실행
             {
                 case 0:
                     maxShotDelay = 1.5f;
@@ -85,7 +85,7 @@ public class EnemyCtrl : MonoBehaviour
                     break;
             }
         }
-        if (!isPaternTime)
+        if (!isPaternTime) //하나의 보스 패턴이 끝났을 때 다음 패턴을 위한 딜레이
             Invoke("PaternTimeStart", 2f);
 
         switch (paternType) //enemy들이 움직이는 코드
@@ -303,7 +303,7 @@ public class EnemyCtrl : MonoBehaviour
             float t = 0f;
             while (true)
             {
-                //bossWayPoints[1].transform.position = new Vector3(4f, Random.Range(1f, 4f));
+                //bossWayPoints[1].transform.position = new Vector3(4f, Random.Range(1f, 4f)); //보스 움직임 랜덤처리
                 //bossWayPoints[2].transform.position = new Vector3(-4f, Random.Range(1f, 4f));
                 while (t < 1f)
                 {

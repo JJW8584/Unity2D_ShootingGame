@@ -43,7 +43,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void PlayerPos()
     {
-        Vector3 worldpos = Camera.main.WorldToViewportPoint(this.transform.position);
+        Vector3 worldpos = Camera.main.WorldToViewportPoint(this.transform.position); //플레이어가 화면 밖으로 나가지 않도록 함
         if (worldpos.x < 0f) worldpos.x = 0f;
         if (worldpos.y < 0f) worldpos.y = 0f;
         if (worldpos.x > 1f) worldpos.x = 1f;
