@@ -180,32 +180,28 @@ public class GameManager : MonoBehaviour
         {
             if (enemyA[i].activeSelf)
             {
-                EnemyCtrl enemyLogic = enemyA[i].GetComponent<EnemyCtrl>();
-                enemyLogic.OnHit(100);
+                enemyA[i].SetActive(false);
             }
         }
         for (int i = 0; i < enemyB.Length; i++)
         {
             if (enemyB[i].activeSelf)
             {
-                EnemyCtrl enemyLogic = enemyB[i].GetComponent<EnemyCtrl>();
-                enemyLogic.OnHit(100);
+                enemyB[i].SetActive(false);
             }
         }
         for (int i = 0; i < enemyC.Length; i++)
         {
             if (enemyC[i].activeSelf)
             {
-                EnemyCtrl enemyLogic = enemyC[i].GetComponent<EnemyCtrl>();
-                enemyLogic.OnHit(100);
+                enemyC[i].SetActive(false);
             }
         }
         for (int i = 0; i < boss.Length; i++)
         {
             if (boss[i].activeSelf)
             {
-                EnemyCtrl enemyLogic = boss[i].GetComponent<EnemyCtrl>();
-                enemyLogic.OnHit(4000);
+                boss[i].SetActive(false);
             }
         }
 

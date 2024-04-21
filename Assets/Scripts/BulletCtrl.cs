@@ -26,7 +26,7 @@ public class BulletCtrl : MonoBehaviour
             gameObject.SetActive(false);
         else if (gameObject.tag == "Bullet" && collision.gameObject.tag == "Enemy") //적과 충돌 시 파괴
             gameObject.SetActive(false);
-        else if (gameObject.tag == "Enemy Bullet" && collision.gameObject.tag == "Player") //플레이어가 맞을 시 파괴
+        else if ((gameObject.tag == "Enemy Bullet" || gameObject.tag == "Boss Bullet") && collision.gameObject.tag == "Player") //플레이어가 맞을 시 파괴
             gameObject.SetActive(false);
     }
 }
